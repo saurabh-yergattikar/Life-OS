@@ -1,0 +1,19 @@
+# ADK Implementation Dependencies
+google-adk>=1.0.0
+google-auth-library>=2.0.0
+google-generativeai>=0.3.0
+requests>=2.31.0
+numpy>=1.24.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+
+# Flask for ADK Backend & Frontend
+flask>=2.3.0
+flask-cors>=4.0.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0 
