@@ -3,74 +3,97 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const geminiAgent_1 = require("../agent/geminiAgent");
 const router = (0, express_1.Router)();
-// Store active agent sessions
+// Store active interview prep sessions
 const activeSessions = new Map();
+// Helper function to add timeout to promises
+const withTimeout = (promise, timeoutMs) => {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), timeoutMs))
+    ]);
+};
 router.post('/', async (req, res) => {
     try {
         const { prompt } = req.body;
         if (!prompt)
             return res.status(400).json({ error: 'Missing prompt' });
-        // Check if this looks like a complex task that needs multi-agent processing
-        const complexTaskKeywords = ['interview', 'prepare', 'plan', 'strategy', 'research', 'analysis', 'project'];
-        const isComplexTask = complexTaskKeywords.some(keyword => prompt.toLowerCase().includes(keyword));
-        if (isComplexTask) {
-            // Handle as multi-agent task
-            const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            // Start analysis
-            activeSessions.set(sessionId, {
-                tasks: [],
-                originalQuery: prompt,
-                status: 'analyzing'
-            });
-            // Analyze task and create agents
-            const analysis = await (0, geminiAgent_1.analyzeTaskAndCreateAgents)(prompt);
-            // Update session with tasks
-            activeSessions.set(sessionId, {
-                tasks: analysis.tasks,
-                originalQuery: prompt,
-                status: 'executing'
-            });
-            // Start executing tasks in parallel
-            const taskPromises = analysis.tasks.map(async (task) => {
-                const updatedTask = await (0, geminiAgent_1.executeAgentTask)(task);
-                const session = activeSessions.get(sessionId);
-                if (session) {
-                    session.tasks = session.tasks.map(t => t.id === task.id ? updatedTask : t);
-                    activeSessions.set(sessionId, session);
-                }
-                return updatedTask;
-            });
-            // Wait for all tasks to complete
-            const completedTasks = await Promise.all(taskPromises);
-            // Generate final summary
-            const summary = await (0, geminiAgent_1.generateFinalSummary)(completedTasks, prompt);
-            // Update session as completed
-            activeSessions.set(sessionId, {
-                tasks: completedTasks,
-                originalQuery: prompt,
-                status: 'completed',
-                summary
-            });
-            res.json({
-                response: analysis.acknowledgment,
-                sessionId,
-                tasks: completedTasks,
-                summary,
-                type: 'multi_agent'
-            });
+        const interviewKeywords = ['interview', 'amazon', 'google', 'microsoft', 'facebook', 'meta', 'apple', 'netflix', 'behavioral', 'technical', 'mock', 'prepare', 'senior', 'backend', 'frontend'];
+        const emergencyKeywords = [
+            'emergency', 'crisis', 'urgent', 'immediate', 'help', 'fall', 'accident', 'hospital', 'mom', 'dad', 'family', 'sick', 'hurt', 'broken', 'bleeding', 'pain', 'unconscious', 'ambulance', '911', 'critical', 'life', 'death', 'serious', 'emergency room', 'ER', 'ICU', 'intensive care',
+            // Work-life balance conflicts
+            'production deployment', 'deployment', 'pick up', 'pickup', 'daughter', 'son', 'child', 'school', 'urgent meeting', 'critical meeting', 'deadline', 'conflict', 'time conflict', 'schedule conflict',
+            // Time-sensitive situations
+            'now', 'immediately', 'asap', 'right now', 'urgently', 'critical', 'important', 'urgent', 'time sensitive', 'time-sensitive',
+            // Family emergencies
+            'family emergency', 'parent', 'childcare', 'child care', 'babysitter', 'nanny', 'caregiver',
+            // Work emergencies
+            'server down', 'outage', 'system crash', 'database', 'production issue', 'live issue', 'customer issue', 'client emergency'
+        ];
+        const isInterviewRequest = interviewKeywords.some(keyword => prompt.toLowerCase().includes(keyword));
+        const isEmergencyRequest = emergencyKeywords.some(keyword => prompt.toLowerCase().includes(keyword));
+        if (isEmergencyRequest) {
+            const sessionId = `emergency_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            try {
+                const emergencyResponse = await withTimeout((0, geminiAgent_1.emergencyCrisisAgent)(prompt), 60000);
+                activeSessions.set(sessionId, emergencyResponse);
+                res.json({
+                    response: emergencyResponse.summary,
+                    sessionId,
+                    actions: emergencyResponse.actions,
+                    summary: emergencyResponse.summary,
+                    progress: emergencyResponse.progress,
+                    type: 'emergency_crisis'
+                });
+            }
+            catch (error) {
+                console.error('Emergency crisis agent failed:', error);
+                const fallbackResponse = await withTimeout((0, geminiAgent_1.geminiChat)(prompt), 10000);
+                res.status(500).json({
+                    response: fallbackResponse,
+                    type: 'simple',
+                    error: 'Emergency crisis processing failed, using simple response'
+                });
+            }
+        }
+        else if (isInterviewRequest) {
+            const sessionId = `interview_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            try {
+                const interviewResponse = await withTimeout((0, geminiAgent_1.interviewPrepAgent)(prompt), 60000);
+                activeSessions.set(sessionId, interviewResponse);
+                res.json({
+                    response: interviewResponse.summary,
+                    sessionId,
+                    actions: interviewResponse.actions,
+                    summary: interviewResponse.summary,
+                    progress: interviewResponse.progress,
+                    type: 'interview_prep'
+                });
+            }
+            catch (error) {
+                console.error('Interview prep agent failed:', error);
+                const fallbackResponse = await withTimeout((0, geminiAgent_1.geminiChat)(prompt), 10000);
+                res.status(500).json({
+                    response: fallbackResponse,
+                    type: 'simple',
+                    error: 'Interview prep processing failed, using simple response'
+                });
+            }
         }
         else {
-            // Handle as simple chat
-            const aiResponse = await (0, geminiAgent_1.geminiChat)(prompt);
+            const aiResponse = await withTimeout((0, geminiAgent_1.geminiChat)(prompt), 15000);
             res.json({ response: aiResponse, type: 'simple' });
         }
     }
     catch (err) {
         console.error('Chat API error:', err);
-        res.status(500).json({ error: 'Chat API error', details: err.message });
+        res.status(500).json({
+            error: 'Chat API error',
+            details: err.message,
+            type: 'error'
+        });
     }
 });
-// Get session status and tasks
+// Get session status and actions
 router.get('/session/:sessionId', (req, res) => {
     const { sessionId } = req.params;
     const session = activeSessions.get(sessionId);
@@ -79,20 +102,22 @@ router.get('/session/:sessionId', (req, res) => {
     }
     res.json({
         sessionId,
-        status: session.status,
-        tasks: session.tasks,
+        type: sessionId.startsWith('emergency_') ? 'emergency_crisis' : 'interview_prep',
+        analysis: session.analysis,
+        actions: session.actions,
         summary: session.summary,
-        originalQuery: session.originalQuery
+        progress: session.progress
     });
 });
 // Get all active sessions
 router.get('/sessions', (req, res) => {
     const sessions = Array.from(activeSessions.entries()).map(([sessionId, session]) => ({
         sessionId,
-        status: session.status,
-        taskCount: session.tasks.length,
-        completedTasks: session.tasks.filter(t => t.status === 'completed').length,
-        originalQuery: session.originalQuery
+        type: sessionId.startsWith('emergency_') ? 'emergency_crisis' : 'interview_prep',
+        analysis: session.analysis,
+        actions: session.actions,
+        summary: session.summary,
+        progress: session.progress
     }));
     res.json({ sessions });
 });

@@ -68,13 +68,13 @@ class ADKHybridBackend:
         
         # Same demo tasks as previous implementation
         self.demo_tasks = [
-            {"id": "bill_negotiation", "name": "Negotiating Comcast Bill", "type": "wealth", "duration": 15, "impact": 30},
-            {"id": "subscription_cancel", "name": "Cancelling Unused Subscriptions", "type": "wealth", "duration": 12, "impact": 145},
-            {"id": "investment_opt", "name": "Optimizing Investments", "type": "wealth", "duration": 10, "impact": 0},
-            {"id": "sleep_analysis", "name": "Analyzing Sleep Data", "type": "health", "duration": 8, "impact": 0},
-            {"id": "massage_booking", "name": "Booking Massage Appointment", "type": "health", "duration": 10, "impact": 0},
-            {"id": "job_scan", "name": "Scanning Job Opportunities", "type": "career", "duration": 10, "impact": 0},
-            {"id": "market_analysis", "name": "Analyzing Market Opportunities", "type": "market", "duration": 10, "impact": 0}
+            {"id": "bill_negotiation", "name": "💰 Smart Savings Commander", "type": "wealth", "duration": 15, "impact": 30},
+            {"id": "subscription_cancel", "name": "🧼 Auto Declutter Bot", "type": "wealth", "duration": 12, "impact": 145},
+            {"id": "investment_opt", "name": "📈 Growth Strategy Engine", "type": "wealth", "duration": 10, "impact": 0},
+            {"id": "sleep_analysis", "name": "🛌 Wellness Monitor", "type": "health", "duration": 8, "impact": 0},
+            {"id": "massage_booking", "name": "🤖 Lifestyle Buddy", "type": "health", "duration": 10, "impact": 0},
+            {"id": "job_scan", "name": "🧠 Career Compass AI", "type": "career", "duration": 10, "impact": 0},
+            {"id": "market_analysis", "name": "🌍 Trend & Opportunity Radar", "type": "market", "duration": 10, "impact": 0}
         ]
         
         self.setup_routes()
@@ -243,7 +243,10 @@ class ADKHybridBackend:
         """ADK agent negotiates bills"""
         print(f"[ADK Tool] Negotiating comcast bill: $110")
         self.negotiation_steps = [
-            "Let me check if we can save money $ 💸 on Recurring Bills",
+            "💰 Smart Savings Commander: Evaluating James's Car Insurance",
+            "Car insurance was negotiated 1 month back",
+            "Will review for any negotiation after 11 months later",
+            "Now checking WiFi bill negotiation...",
             "Analyzing James's Monthly Bills",
             "James has been with Comcast for many years and at $110 / Month",
             "🧠 Thinking: Checking alternatives...",
@@ -268,31 +271,34 @@ class ADKHybridBackend:
         """ADK agent optimizes investments"""
         print(f"[ADK Tool] Optimizing investment portfolio...")
         self.negotiation_steps = [
-            "📊 Analyzing current portfolio...",
-            "Checking: 401k allocation",
-            "Checking: Roth IRA contributions",
-            "Checking: Emergency fund status",
-            "🧠 Thinking: Portfolio looks well-balanced",
-            "✅ Investment optimization complete"
+            "📈 Career Growth Strategy Engine: James has upcoming Interview with Google",
+            "So, I should book Mock Interview for James",
+            "Finding available mock interview slots",
+            "🧠 Thinking: Checking interview coach availability...",
+            "Found: Available slots for Google-style mock interview",
+            "✅ Mock interview booked for James"
         ]
     
     async def _adk_sleep_analysis(self):
         """ADK agent analyzes sleep data"""
         print(f"[ADK Tool] Analyzing sleep data...")
         self.negotiation_steps = [
-            "😴 Analyzing sleep patterns...",
-            "Average sleep: 6.2 hours (below recommended)",
-            "Sleep quality score: 72/100",
-            "🧠 Thinking: Sleep quality declining",
-            "⚠️ Alert: Sleep intervention needed",
-            "✅ Sleep analysis complete"
+            "🛌 Wellness Monitor: James had heart rate elevated for last couple of nights during sleep",
+            "SPO2 during sleep was ~94% as well",
+            "Sleep monitoring app gives signal of snore as well",
+            "So based on these combinations, Scheduling Primary Physician Appointment for James",
+            "✅ Task completed"
         ]
-        self.alerts.append("Sleep quality declining - intervention activated")
+        self.alerts.append("Primary physician appointment scheduled based on sleep monitoring data.")
     
     async def _adk_wellness_booking(self):
         """ADK agent books wellness appointments"""
         print(f"[ADK Tool] Booking wellness appointment...")
         self.negotiation_steps = [
+            "🤖 Lifestyle Buddy: I booked Chiropractor appointment for James 2 weeks back and James already visited",
+            "So, After 2 weeks will revisit Chiropractor appointment",
+            "James has been doing commute for 2 hours round trip and Has Desk job",
+            "Contacting Massage providers for James massage",
             "💆‍♀️ Checking wellness options...",
             "Found: Local massage therapist",
             "Available: Today 6 PM",
@@ -306,12 +312,15 @@ class ADKHybridBackend:
         """ADK agent scans for job opportunities"""
         print(f"[ADK Tool] Scanning job opportunities...")
         self.negotiation_steps = [
-            "🎯 Scanning job market...",
-            "Found: Google SDE role (94% match)",
-            "Found: Amazon SDE III position",
-            "Found: Meta E5 opportunity",
-            "🧠 Thinking: Great opportunities available",
-            "✅ Job scanning complete"
+            "🧠 Career Compass AI: James had shared with me Dream companies Google, Netflix, Meta",
+            "I see Job posting just happened few hours back",
+            "James profile matches 95% at these Jobs",
+            "Applying to these jobs",
+            "Starting job application process...",
+            "✅ Success: Job applications submitted to Google, Netflix, Meta",
+            "James already has Amazon Interview",
+            "So, Retrieving Interview Prep resources and uploading under Career Hub for James",
+            "✅ Success: Interview prep resources, Recent interview coding problems uploaded to Career Hub ✅"
         ]
     
     async def _adk_market_analysis(self):

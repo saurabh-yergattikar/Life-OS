@@ -1,11 +1,111 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { startNightMode, getNightProgress, getMorningReport } from "./api";
+import { startNightMode, getNightProgress, getMorningReport, resetNightAgent } from "./api";
 import { AnimatePresence, motion as m } from "framer-motion";
+
+// Clock component that starts at 1:59 AM and counts to 2:00 AM
+function NightClock({ onTimeReached }: { onTimeReached: () => void }) {
+  const [time, setTime] = useState(new Date());
+  const [isCounting, setIsCounting] = useState(false);
+  const [shouldTrigger, setShouldTrigger] = useState(false);
+
+  useEffect(() => {
+    // Start the clock at 1:59:55 AM
+    const startTime = new Date();
+    startTime.setHours(1, 59, 55, 0);
+    setTime(startTime);
+    setIsCounting(true);
+
+    const interval = setInterval(() => {
+      setTime(prevTime => {
+        const newTime = new Date(prevTime.getTime() + 1000);
+        
+        // Check if we've reached 2:00:00 AM
+        if (newTime.getHours() === 2 && newTime.getMinutes() === 0 && newTime.getSeconds() === 0) {
+          setIsCounting(false);
+          clearInterval(interval);
+          setShouldTrigger(true);
+          return newTime;
+        }
+        
+        return newTime;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Use useEffect to trigger the callback when shouldTrigger becomes true
+  useEffect(() => {
+    if (shouldTrigger) {
+      onTimeReached();
+    }
+  }, [shouldTrigger, onTimeReached]);
+
+  const formatTime = (date: Date) => {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12 || 12;
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)} ${ampm}`;
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
+      <motion.div 
+        initial={{ opacity: 0, y: -30 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.7 }} 
+        className="mb-8 text-center"
+      >
+        <h1 className="text-4xl font-extrabold text-blue-200 drop-shadow mb-2">🌙 LifeOS Night Agent</h1>
+        <div className="text-lg text-blue-100">Preparing to optimize your life while you sleep</div>
+      </motion.div>
+      
+      <motion.div 
+        initial={{ scale: 0.8, opacity: 0 }} 
+        animate={{ scale: 1, opacity: 1 }} 
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="relative"
+      >
+        <div className="font-mono text-8xl md:text-9xl text-red-500 bg-black/80 px-32 py-8 rounded-3xl shadow-2xl border border-red-500/30 backdrop-blur-sm w-[600px] md:w-[800px]">
+          {formatTime(time)}
+        </div>
+        
+        {/* Glare effect */}
+        <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent" 
+               style={{ animation: 'shine 4s infinite' }} />
+        </div>
+      </motion.div>
+      
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ delay: 0.8 }}
+        className="mt-8 text-center"
+      >
+        <div className="text-xl text-blue-200 font-semibold">
+          {isCounting ? "Night Agent works automatically at 2:00 AM" : "Starting Night Agent..."}
+        </div>
+        <div className="text-sm text-blue-100 mt-2">
+          {isCounting ? "Preparing autonomous optimization tasks..." : "Initializing AI agents..."}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+
 
 export default function NightAgentPage() {
   const [started, setStarted] = useState(false);
+  const [showClock, setShowClock] = useState(true);
   const [progress, setProgress] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [impact, setImpact] = useState({ money: 0, health: 0, opportunities: 0 });
@@ -17,9 +117,42 @@ export default function NightAgentPage() {
   const [error, setError] = useState<string | null>(null);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
   const [negotiationSteps, setNegotiationSteps] = useState<string[]>([]);
+  const lastTaskIdRef = useRef<string | null>(null);
 
-  // Start Night Mode
+  // Reset backend state when component mounts
+  useEffect(() => {
+    const resetBackend = async () => {
+      try {
+        await resetNightAgent();
+        console.log('[NightAgent] Backend state reset');
+      } catch (err) {
+        console.error('[NightAgent] Failed to reset backend:', err);
+      }
+    };
+    resetBackend();
+  }, []);
+
+  // Handle clock reaching 2:00 AM
+  const handleTimeReached = useCallback(async () => {
+    console.log('[NightAgent] Clock reached 2:00 AM, starting Night Mode');
+    setShowClock(false);
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const resp = await startNightMode();
+      console.log('[NightAgent] /api/night-agent/start response:', resp);
+      setStarted(true);
+    } catch (err: any) {
+      setError("Failed to start Night Mode: " + (err.message || err.toString()));
+      console.error('[NightAgent] Error starting Night Mode:', err);
+    }
+    setLoading(false);
+  }, []);
+
+  // Start Night Mode manually (fallback)
   const handleStart = async () => {
+    setShowClock(false);
     setLoading(true);
     setError(null);
     console.log('[NightAgent] User clicked Start Night Mode');
@@ -44,7 +177,29 @@ export default function NightAgentPage() {
         setCompletedTasks(prog.completedTasks);
         setTotalTasks(prog.totalTasks);
         setCurrentTask(prog.currentTask);
-        setNegotiationSteps(prog.negotiationSteps || []);
+        
+        // Clear steps if task changed
+        if (prog.currentTaskId && prog.currentTaskId !== lastTaskIdRef.current) {
+          console.log('[NightAgent] Task changed from', lastTaskIdRef.current, 'to', prog.currentTaskId);
+          setNegotiationSteps([]);
+          lastTaskIdRef.current = prog.currentTaskId;
+        }
+        
+        // Only update negotiation steps if they're different to prevent duplicates
+        if (prog.negotiationSteps && prog.negotiationSteps.length > 0) {
+          setNegotiationSteps(prevSteps => {
+            // Only update if the new steps are different from current ones
+            if (JSON.stringify(prevSteps) !== JSON.stringify(prog.negotiationSteps)) {
+              console.log('[NightAgent] Updating negotiation steps:', prog.negotiationSteps.length, 'steps');
+              return prog.negotiationSteps;
+            }
+            return prevSteps;
+          });
+        } else if (prog.negotiationSteps && prog.negotiationSteps.length === 0) {
+          // Clear steps if backend sends empty array
+          setNegotiationSteps([]);
+        }
+        
         setImpact({
           money: prog.totalSavings || 0,
           health: prog.alerts ? prog.alerts.filter((a: any) => a.type === "health").length : 0,
@@ -83,6 +238,11 @@ export default function NightAgentPage() {
     })();
   }, [completed]);
 
+  // Show clock first, then night agent interface
+  if (showClock) {
+    return <NightClock onTimeReached={handleTimeReached} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 flex flex-col items-center justify-center p-8">
       <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mb-8 text-center">
@@ -106,7 +266,8 @@ export default function NightAgentPage() {
             <div className="flex items-center gap-8 justify-between">
               <div className="flex flex-col items-center">
                 <span className="text-2xl text-green-300 font-bold">${impact.money}</span>
-                <span className="text-xs text-green-100">Money Saved</span>
+                <span className="text-xs text-green-100">Money Saved / Month</span>
+                <span className="text-xs text-green-200">${impact.money * 12} / Year</span>
               </div>
               <div className="flex flex-col items-center">
                 <span className="text-2xl text-pink-300 font-bold">{impact.health}</span>
@@ -138,14 +299,14 @@ export default function NightAgentPage() {
                   transition={{ delay: 0.1 }}
                   className={`flex flex-col gap-2 p-4 rounded-xl shadow-lg border border-white/10 bg-blue-800/60 border-blue-400/40`}
                 >
-                  <span className="text-lg font-bold">{currentTask.name}</span>
+                  <span className="text-lg font-bold text-white">{currentTask.name}</span>
                   {/* Show live negotiation steps for any task */}
                   {negotiationSteps.length > 0 && (
                     <div className="mt-2 flex flex-col gap-1 text-blue-100 text-sm font-mono bg-blue-950/40 rounded p-2 min-h-[120px] max-w-full">
                       <AnimatePresence initial={false}>
                         {negotiationSteps.map((step, idx) => (
                           <m.span
-                            key={idx}
+                            key={`${currentTask?.id || 'task'}-${idx}-${step.substring(0, 20)}`}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 10 }}
@@ -169,10 +330,40 @@ export default function NightAgentPage() {
             </div>
             {completed && report && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 text-center">
-                <div className="text-2xl font-bold text-green-300 mb-2">🌅 Morning Report Ready!</div>
-                <div className="text-blue-100">Total Money Saved: <span className="font-bold text-green-200">${report.summary.moneySaved}</span></div>
-                <div className="text-blue-100">Health Wins: <span className="font-bold text-pink-200">{report.summary.healthAlertsAddressed}</span></div>
-                <div className="text-blue-100">Opportunities Found: <span className="font-bold text-yellow-200">{report.summary.careerOpportunities}</span></div>
+                <div className="text-2xl font-bold text-green-300 mb-4">🌅 Morning Report Ready!</div>
+                
+                {/* Summary Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="bg-green-900/40 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-green-200">${report.summary.moneySavedAnnually}</div>
+                    <div className="text-sm text-green-100">Annual Savings</div>
+                    <div className="text-sm text-green-200">${report.summary.moneySavedMonthly} / Month</div>
+                  </div>
+                  <div className="bg-pink-900/40 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-pink-200">{report.summary.healthWins}</div>
+                    <div className="text-sm text-pink-100">Health Wins</div>
+                  </div>
+                  <div className="bg-yellow-900/40 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-yellow-200">{report.summary.opportunitiesFound}</div>
+                    <div className="text-sm text-yellow-100">Opportunities</div>
+                  </div>
+                </div>
+
+                {/* Summary Actions */}
+                {report.summary.summaryActions && (
+                  <div className="mt-6 bg-blue-950/80 rounded-xl p-4 text-left text-blue-100 shadow">
+                    <div className="font-bold text-blue-300 mb-3">📋 Night Agent Actions Summary:</div>
+                    <div className="space-y-2">
+                      {report.summary.summaryActions.map((action: string, index: number) => (
+                        <div key={index} className="flex items-center gap-2 text-sm">
+                          <span className="text-green-400">✓</span>
+                          <span>{action}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Show Bill Negotiation Script if present */}
                 {report.details.wealth && report.details.wealth[0] && report.details.wealth[0].script && (
                   <div className="mt-6 bg-blue-950/80 rounded-xl p-4 text-left text-blue-100 shadow">
@@ -180,6 +371,7 @@ export default function NightAgentPage() {
                     <pre className="whitespace-pre-wrap text-sm text-blue-100">{report.details.wealth[0].script}</pre>
                   </div>
                 )}
+                
                 {/* Show Market Analysis Result if present */}
                 {report.details.market && report.details.market[0] && report.details.market[0].result && (
                   <div className="mt-6 bg-blue-950/80 rounded-xl p-4 text-left text-blue-100 shadow">
@@ -187,9 +379,6 @@ export default function NightAgentPage() {
                     <pre className="whitespace-pre-wrap text-sm text-blue-100">{report.details.market[0].result}</pre>
                   </div>
                 )}
-                <div className="mt-4">
-                  <button className="px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold shadow hover:bg-blue-600 transition text-lg">View Full Report</button>
-                </div>
               </motion.div>
             )}
           </>

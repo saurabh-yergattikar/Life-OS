@@ -114,12 +114,12 @@ class ADKBackendServer:
     def _execute_night_tasks(self):
         """Simulate ADK agent executing night tasks"""
         tasks = [
-            {"id": "bill_negotiation", "name": "Negotiating Comcast Bill", "type": "wealth", "duration": 15, "impact": 30},
-            {"id": "subscription_cancellation", "name": "Cancelling Unused Subscriptions", "type": "wealth", "duration": 10, "impact": 145},
-            {"id": "health_analysis", "name": "Analyzing Health Data", "type": "health", "duration": 20, "impact": 0},
-            {"id": "wellness_booking", "name": "Booking Wellness Appointment", "type": "health", "duration": 5, "impact": 0},
-            {"id": "career_preparation", "name": "Preparing for Interview", "type": "career", "duration": 25, "impact": 0},
-            {"id": "portfolio_analysis", "name": "Analyzing Portfolio", "type": "wealth", "duration": 15, "impact": 0}
+            {"id": "bill_negotiation", "name": "💰 Smart Savings Commander", "type": "wealth", "duration": 15, "impact": 30},
+            {"id": "subscription_cancellation", "name": "🧼 Auto Declutter Bot", "type": "wealth", "duration": 10, "impact": 145},
+            {"id": "health_analysis", "name": "🛌 Wellness Monitor", "type": "health", "duration": 20, "impact": 0},
+            {"id": "wellness_booking", "name": "🤖 Lifestyle Buddy", "type": "health", "duration": 5, "impact": 0},
+            {"id": "career_preparation", "name": "🧠 Career Compass AI", "type": "career", "duration": 25, "impact": 0},
+            {"id": "portfolio_analysis", "name": "📈 Growth Strategy Engine", "type": "wealth", "duration": 15, "impact": 0}
         ]
         
         for i, task in enumerate(tasks):

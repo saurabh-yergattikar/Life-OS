@@ -22,19 +22,26 @@ let report: any = null;
 let billNegotiationScript: string | null = null;
 let marketAnalysisResult: string | null = null;
 let negotiationSteps: string[] = [];
+let currentTaskId: string | null = null;
+let isSimulationRunning = false;
 
 const demoTasks = [
-  { id: "bill_negotiation", name: "Negotiating Comcast Bill", type: "wealth", duration: 15, impact: 30 },
-  { id: "subscription_cancel", name: "Cancelling Unused Subscriptions", type: "wealth", duration: 12, impact: 10 },
-  { id: "investment_opt", name: "Optimizing Investments", type: "wealth", duration: 10, impact: 0 },
-  { id: "sleep_analysis", name: "Analyzing Sleep Data", type: "health", duration: 8, impact: 0 },
-  { id: "massage_booking", name: "Booking Massage Appointment", type: "health", duration: 10, impact: 0 },
-  { id: "job_scan", name: "Scanning Job Opportunities", type: "career", duration: 10, impact: 0 },
-  { id: "market_analysis", name: "Analyzing Market Opportunities", type: "market", duration: 10, impact: 0 },
+  { id: "bill_negotiation", name: "💰 Smart Savings Commander", type: "wealth", duration: 15, impact: 30 },
+  { id: "subscription_cancel", name: "🧼 Auto Declutter Bot", type: "wealth", duration: 12, impact: 10 },
+  { id: "investment_opt", name: "📈 Growth Strategy Engine", type: "wealth", duration: 10, impact: 0 },
+  { id: "sleep_analysis", name: "🛌 Wellness Monitor", type: "health", duration: 8, impact: 0 },
+  { id: "massage_booking", name: "🤖 Lifestyle Buddy", type: "health", duration: 10, impact: 0 },
+  { id: "job_scan", name: "🧠 Career Compass AI", type: "career", duration: 10, impact: 0 },
+  { id: "market_analysis", name: "🌍 Trend & Opportunity Radar", type: "market", duration: 10, impact: 0 },
 ];
 
 router.post('/start', (req: Request, res: Response) => {
   log('POST /api/night-agent/start called');
+  
+  // Stop any existing simulation
+  isSimulationRunning = false;
+  
+  // Reset all state
   session = {
     status: 'running',
     completedTasks: 0,
@@ -52,8 +59,13 @@ router.post('/start', (req: Request, res: Response) => {
   billNegotiationScript = null;
   marketAnalysisResult = null;
   negotiationSteps = [];
+  currentTaskId = null;
+  
+  log('Reset all state and starting new simulation');
   res.json({ status: 'started', session });
-  // Simulate task execution in background
+  
+  // Start new simulation
+  isSimulationRunning = true;
   simulateNightAgent();
 });
 
@@ -69,6 +81,7 @@ router.get('/progress', (req: Request, res: Response) => {
     billNegotiationScript,
     marketAnalysisResult,
     negotiationSteps,
+    currentTaskId,
   });
 });
 
@@ -80,6 +93,29 @@ router.get('/report', (req: Request, res: Response) => {
   }
   log('Report returned');
   res.json(report);
+});
+
+// Reset endpoint to clear all state
+router.post('/reset', (req: Request, res: Response) => {
+  log('POST /api/night-agent/reset called');
+  
+  // Stop any existing simulation
+  isSimulationRunning = false;
+  
+  // Reset all state
+  session = null;
+  progress = 0;
+  completedTasks = 0;
+  totalSavings = 0;
+  alerts = [];
+  report = null;
+  billNegotiationScript = null;
+  marketAnalysisResult = null;
+  negotiationSteps = [];
+  currentTaskId = null;
+  
+  log('All state reset');
+  res.json({ status: 'reset' });
 });
 
 // Mock Comcast Support Chat Endpoint
@@ -149,15 +185,30 @@ router.post('/interview-support-chat', (req: Request, res: Response) => {
 async function simulateNightAgent() {
   let i = 0;
   async function nextTask() {
+    // Check if simulation should continue
+    if (!isSimulationRunning) {
+      log('Simulation stopped by user request');
+      return;
+    }
+    
     if (i >= demoTasks.length) {
       session.status = 'completed';
       report = {
         generatedAt: new Date().toISOString(),
         summary: {
           moneySaved: totalSavings,
-          healthAlertsAddressed: 1,
-          careerOpportunities: 1,
+          moneySavedMonthly: totalSavings,
+          moneySavedAnnually: totalSavings * 12,
+          healthWins: 2, // Sleep analysis + massage booking
+          opportunitiesFound: 1, // Job applications
           tasksCompleted: demoTasks.length,
+          summaryActions: [
+            "Negotiated WiFi Bill and Saved $30 ✅",
+            "Unused subscription cancelled: Spotify ✅",
+            "Took 2 Actions for James's better Health and Wellness ✅",
+            "Applied James's Resume to his Dream Companies ✅",
+            "Notifying James Buy Opportunity for NVDA ✅"
+          ]
         },
         details: {
           wealth: [
@@ -171,13 +222,30 @@ async function simulateNightAgent() {
         },
       };
       log('Night Agent session completed');
+      isSimulationRunning = false;
       return;
     }
+    // Check if simulation should continue
+    if (!isSimulationRunning) {
+      log('Simulation stopped during task execution');
+      return;
+    }
+    
     session.currentTask = demoTasks[i];
+    currentTaskId = demoTasks[i].id;
     log(`Task started: ${demoTasks[i].id}`);
+    // Clear negotiation steps at the start of each task
+    negotiationSteps = [];
+    log(`Cleared negotiation steps for task: ${demoTasks[i].id}`);
+    await new Promise(r => setTimeout(r, 500)); // Longer delay to ensure frontend gets cleared state
     if (demoTasks[i].id === "bill_negotiation") {
-      negotiationSteps = [];
-      negotiationSteps.push("Let me check if we can save money $ 💸 on Recurring Bills");
+      negotiationSteps.push("💰 Smart Savings Commander: Evaluating James's Car Insurance");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("Car insurance was negotiated 1 month back");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("Will review for any negotiation after 11 months later");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("Now checking WiFi bill negotiation...");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("Analyzing James's Monthly Bills");
       await new Promise(r => setTimeout(r, 800));
@@ -187,14 +255,8 @@ async function simulateNightAgent() {
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("Found: Comcast $110/mo, Xfinity $80/mo");
       await new Promise(r => setTimeout(r, 800));
-      // Animated working dots for chat start
-      let workingMsg = "Starting chat with Comcast support for Negotiation";
-      for (let i = 1; i <= 3; i++) {
-        negotiationSteps.push(workingMsg + '.'.repeat(i));
-        await new Promise(r => setTimeout(r, 500));
-        negotiationSteps.pop();
-      }
-      negotiationSteps.push(workingMsg + '...');
+      // Add the final working message
+      negotiationSteps.push("Starting chat with Comcast support for Negotiation...");
       await new Promise(r => setTimeout(r, 800));
       // Step 1: Analyze bill and alternatives using Gemini
       let analysis = '';
@@ -239,18 +301,24 @@ async function simulateNightAgent() {
       }
       // Step 3: Closure
       if (/\$80/.test(comcastReply)) {
-        totalSavings += 30; // $110 - $80 (corrected from previous incorrect value)
-        alerts.push({ type: 'success', message: 'Comcast bill reduced to $80/month.' });
+        totalSavings += 30; // $110 - $80 = $30 saved per month
+        alerts.push({ type: 'success', message: 'Comcast bill reduced to $80/month. Saved $30/month.' });
         billNegotiationScript = userMsg + '\n' + comcastReply + '\nNegotiation Result: Success, bill reduced to $80/month.';
-        negotiationSteps.push("✅ Success: Bill reduced to $80/mo");
+        negotiationSteps.push("✅ Success: Bill reduced to $80/mo (Saved $30/mo)");
       } else {
         alerts.push({ type: 'info', message: 'Negotiation attempted, but no reduction confirmed.' });
         billNegotiationScript = userMsg + '\n' + comcastReply + '\nNegotiation Result: No reduction confirmed.';
         negotiationSteps.push("ℹ️ No reduction confirmed");
       }
-      // After negotiation, stop progress for testing
-      //session.status = 'paused_for_testing';
-      //return;
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
+      
+      // Check if simulation should continue
+      if (!isSimulationRunning) {
+        log('Simulation stopped after bill negotiation task');
+        return;
+      }
+      
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
@@ -259,26 +327,19 @@ async function simulateNightAgent() {
       return;
     }
     if (demoTasks[i].id === "subscription_cancel") {
-      negotiationSteps = [];
-      negotiationSteps.push("Let me check if we can save money $ 💸 on Unused Subscriptions");
+      negotiationSteps.push("📱 Subscription Analysis: Let me check for unused subscriptions");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("Analyzing James's Subscriptions");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("🧠 Thinking: Reviewing usage data... James has been using Netflix, Audible, Found unused: Spotify");
+      negotiationSteps.push("🧠 Thinking: Reviewing usage data...");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("Looks like Spotify has not been used for ~3 Months");
+      negotiationSteps.push("Found: Netflix (active), Audible (active), Spotify (unused for 3 months)");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("James has been using Google's YouTube Music.");
+      negotiationSteps.push("James has been using Google's YouTube Music instead of Spotify");
       await new Promise(r => setTimeout(r, 800));
       // Only cancel Spotify
       let provider = "Spotify";
-      let workingMsg = `Starting chat with ${provider} support for Cancellation`;
-      for (let i = 1; i <= 3; i++) {
-        negotiationSteps.push(workingMsg + '.'.repeat(i));
-        await new Promise(r => setTimeout(r, 500));
-        negotiationSteps.pop();
-      }
-      negotiationSteps.push(workingMsg + '...');
+      negotiationSteps.push(`Starting chat with ${provider} support for Cancellation...`);
       await new Promise(r => setTimeout(r, 800));
       let userMsg = `Hi, I would like to cancel my Spotify subscription.`;
       negotiationSteps.push(`💬 To Spotify: ` + userMsg);
@@ -301,6 +362,15 @@ async function simulateNightAgent() {
       totalSavings += 10;
       alerts.push({ type: 'success', message: 'Unused Spotify subscription cancelled. Saved $10/month.' });
       billNegotiationScript = 'Unused subscription cancelled: Spotify.';
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
+      
+      // Check if simulation should continue
+      if (!isSimulationRunning) {
+        log('Simulation stopped after subscription cancellation task');
+        return;
+      }
+      
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
@@ -309,7 +379,6 @@ async function simulateNightAgent() {
       return;
     }
     if (demoTasks[i].id === "market_analysis") {
-      negotiationSteps = [];
       negotiationSteps.push("Let me check if we can optimize your investments and portfolio 📈");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("Analyzing James's Portfolio: AAPL, TSLA, NVDA, AMZN");
@@ -346,6 +415,15 @@ async function simulateNightAgent() {
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("I will notify James to buy NVDA ✅");
       alerts.push({ type: 'success', message: 'Portfolio reviewed and buy recommendation given for NVDA.' });
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
+      
+      // Check if simulation should continue
+      if (!isSimulationRunning) {
+        log('Simulation stopped after market analysis task');
+        return;
+      }
+      
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
@@ -354,33 +432,18 @@ async function simulateNightAgent() {
       return;
     }
     if (demoTasks[i].id === "sleep_analysis") {
-      negotiationSteps = [];
-      negotiationSteps.push("Let me check your health and wellness patterns 🏥");
+      negotiationSteps.push("🛌 Wellness Monitor: James had heart rate elevated for last couple of nights during sleep");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("Analyzing James's Sleep & Activity Data");
+      negotiationSteps.push("SPO2 during sleep was ~94% as well");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("🧠 Thinking: Reviewing sleep patterns and activity levels...");
+      negotiationSteps.push("Sleep monitoring app gives signal of snore as well");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("James has not been getting good sleep for last 2 weeks");
+      negotiationSteps.push("So based on these combinations, Scheduling Primary Physician Appointment for James");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("Active Time is less as well");
-      await new Promise(r => setTimeout(r, 800));
-      // Use Gemini for sleep analysis
-      let analysis = '';
-      try {
-        const prompt = `James has poor sleep for 2 weeks and low activity. Provide 3-4 actionable health recommendations in a step-by-step, human-like way. Focus on sleep improvement and activity increase.`;
-        analysis = await geminiChat(prompt);
-      } catch (err) {
-        analysis = '1. Establish a consistent sleep schedule: Go to bed and wake up at the same time daily.\n2. Create a relaxing bedtime routine: Avoid screens 1 hour before bed.\n3. Increase daily activity: Start with 10-minute walks, gradually increase.\n4. Consider sleep environment: Ensure dark, quiet, cool bedroom.';
-      }
-      // Split analysis into lines for step-by-step UI
-      const steps = analysis.split('\n').filter(l => l.trim().length > 0);
-      for (const step of steps) {
-        negotiationSteps.push(step);
-        await new Promise(r => setTimeout(r, 800));
-      }
-      negotiationSteps.push("✅ Success: Health analysis complete. See above for actionable recommendations.");
-      alerts.push({ type: 'success', message: 'Sleep and activity analysis completed with recommendations.' });
+      negotiationSteps.push("✅ Task completed");
+      alerts.push({ type: 'success', message: 'Primary physician appointment scheduled based on sleep monitoring data.' });
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
@@ -389,8 +452,13 @@ async function simulateNightAgent() {
       return;
     }
     if (demoTasks[i].id === "massage_booking") {
-      negotiationSteps = [];
-      negotiationSteps.push("Let me check if we can book wellness appointments 🧘‍♀️");
+      negotiationSteps.push("🤖 Lifestyle Buddy: I booked Chiropractor appointment for James 2 weeks back and James already visited");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("So, After 2 weeks will revisit Chiropractor appointment");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("James has been doing commute for 2 hours round trip and Has Desk job");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("Contacting Massage providers for James massage");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("Checking James's Calendar Availability");
       await new Promise(r => setTimeout(r, 800));
@@ -419,6 +487,8 @@ async function simulateNightAgent() {
       await new Promise(r => setTimeout(r, 600));
       negotiationSteps.push("✅ Success: Massage booked for Friday evening");
       alerts.push({ type: 'success', message: 'Massage appointment booked for Friday evening.' });
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
@@ -427,8 +497,9 @@ async function simulateNightAgent() {
       return;
     }
     if (demoTasks[i].id === "investment_opt") {
-      negotiationSteps = [];
-      negotiationSteps.push("Let me check if we can book mock interviews for practice 🎯");
+      negotiationSteps.push("📈 Career Growth Strategy Engine: James has upcoming Interview with Google");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("So, I should book Mock Interview for James");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("Finding available mock interview slots");
       await new Promise(r => setTimeout(r, 800));
@@ -457,6 +528,8 @@ async function simulateNightAgent() {
       await new Promise(r => setTimeout(r, 600));
       negotiationSteps.push("✅ Success: Mock interview booked for practice");
       alerts.push({ type: 'success', message: 'Mock interview session booked for Google preparation.' });
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
@@ -465,33 +538,26 @@ async function simulateNightAgent() {
       return;
     }
     if (demoTasks[i].id === "job_scan") {
-      negotiationSteps = [];
-      negotiationSteps.push("Let me check your career opportunities and interview prep 🚀");
+      negotiationSteps.push("🧠 Career Compass AI: James had shared with me Dream companies Google, Netflix, Meta");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("Detecting upcoming Google Interview");
+      negotiationSteps.push("I see Job posting just happened few hours back");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("🧠 Thinking: Researching latest interview questions...");
+      negotiationSteps.push("James profile matches 95% at these Jobs");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("Found: James has upcoming Google Interview");
+      negotiationSteps.push("Applying to these jobs");
       await new Promise(r => setTimeout(r, 800));
-      negotiationSteps.push("Researching and collecting latest interview questions...");
+      negotiationSteps.push("Starting job application process...");
       await new Promise(r => setTimeout(r, 800));
-      // Use Gemini for interview prep
-      let analysis = '';
-      try {
-        const prompt = `James has an upcoming Google interview. Provide 4-5 latest Google interview questions and preparation tips in a step-by-step, human-like way. Focus on technical and behavioral questions.`;
-        analysis = await geminiChat(prompt);
-      } catch (err) {
-        analysis = '1. System Design: Design a scalable URL shortener service.\n2. Coding: Implement a rate limiter for API requests.\n3. Behavioral: Tell me about a time you disagreed with your manager.\n4. Technical: Explain how Google Search works at a high level.\n5. Preparation Tip: Practice coding on a whiteboard and review Google\'s leadership principles.';
-      }
-      // Split analysis into lines for step-by-step UI
-      const steps = analysis.split('\n').filter(l => l.trim().length > 0);
-      for (const step of steps) {
-        negotiationSteps.push(step);
-        await new Promise(r => setTimeout(r, 800));
-      }
-      negotiationSteps.push("✅ Success: Interview prep complete. See above for latest questions and tips.");
-      alerts.push({ type: 'success', message: 'Google interview preparation completed with latest questions.' });
+      negotiationSteps.push("✅ Success: Job applications submitted to Google, Netflix, Meta");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("James already has Amazon Interview");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("So, Retrieving Interview Prep resources and uploading under Career Hub for James");
+      await new Promise(r => setTimeout(r, 800));
+      negotiationSteps.push("✅ Success: Interview prep resources, Recent interview coding problems uploaded to Career Hub ✅");
+      alerts.push({ type: 'success', message: 'Job applications submitted and interview prep resources uploaded to Career Hub.' });
+      // Add delay to show success message
+      await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);

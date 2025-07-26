@@ -18,4 +18,12 @@ export async function getNightProgress() {
 export async function getMorningReport() {
   const res = await fetch(`${BACKEND_URL}/api/night-agent/report`);
   return res.json();
+}
+
+export async function resetNightAgent() {
+  const res = await fetch(`${BACKEND_URL}/api/night-agent/reset`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.json();
 } 

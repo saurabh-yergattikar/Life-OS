@@ -68,13 +68,13 @@ class ADKEnhancedBackend:
         
         # Same demo tasks as previous implementation
         self.demo_tasks = [
-            {"id": "bill_negotiation", "name": "Negotiating Comcast Bill", "type": "wealth", "duration": 15, "impact": 30},
-            {"id": "subscription_cancel", "name": "Cancelling Unused Subscriptions", "type": "wealth", "duration": 12, "impact": 10},
-            {"id": "investment_opt", "name": "Optimizing Investments", "type": "wealth", "duration": 10, "impact": 0},
-            {"id": "sleep_analysis", "name": "Analyzing Sleep Data", "type": "health", "duration": 8, "impact": 0},
-            {"id": "massage_booking", "name": "Booking Massage Appointment", "type": "health", "duration": 10, "impact": 0},
-            {"id": "job_scan", "name": "Scanning Job Opportunities", "type": "career", "duration": 10, "impact": 0},
-            {"id": "market_analysis", "name": "Analyzing Market Opportunities", "type": "market", "duration": 10, "impact": 0}
+            {"id": "bill_negotiation", "name": "💰 Smart Savings Commander", "type": "wealth", "duration": 15, "impact": 30},
+            {"id": "subscription_cancel", "name": "🧼 Auto Declutter Bot", "type": "wealth", "duration": 12, "impact": 10},
+            {"id": "investment_opt", "name": "📈 Growth Strategy Engine", "type": "wealth", "duration": 10, "impact": 0},
+            {"id": "sleep_analysis", "name": "🛌 Wellness Monitor", "type": "health", "duration": 8, "impact": 0},
+            {"id": "massage_booking", "name": "🤖 Lifestyle Buddy", "type": "health", "duration": 10, "impact": 0},
+            {"id": "job_scan", "name": "🧠 Career Compass AI", "type": "career", "duration": 10, "impact": 0},
+            {"id": "market_analysis", "name": "🌍 Trend & Opportunity Radar", "type": "market", "duration": 10, "impact": 0}
         ]
         
         self.setup_routes()
@@ -230,7 +230,16 @@ class ADKEnhancedBackend:
         print(f"[ADK Tool] Negotiating comcast bill: $110")
         
         # Step 1: Initial analysis
-        self.negotiation_steps = ["Let me check if we can save money $ 💸 on Recurring Bills"]
+        self.negotiation_steps = ["💰 Smart Savings Commander: Evaluating James's Car Insurance"]
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("Car insurance was negotiated 1 month back")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("Will review for any negotiation after 11 months later")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("Now checking WiFi bill negotiation...")
         await asyncio.sleep(1.5)
         
         self.negotiation_steps.append("Analyzing James's Monthly Bills")
@@ -342,53 +351,62 @@ class ADKEnhancedBackend:
         """ADK agent optimizes investments with step-by-step execution"""
         print(f"[ADK Tool] Optimizing investment portfolio...")
         
-        self.negotiation_steps = ["📊 Analyzing current portfolio..."]
+        self.negotiation_steps = ["📈 Career Growth Strategy Engine: James has upcoming Interview with Google"]
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Checking: 401k allocation")
+        self.negotiation_steps.append("So, I should book Mock Interview for James")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Checking: Roth IRA contributions")
+        self.negotiation_steps.append("Finding available mock interview slots")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Checking: Emergency fund status")
+        self.negotiation_steps.append("🧠 Thinking: Checking interview coach availability...")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("🧠 Thinking: Portfolio looks well-balanced")
+        self.negotiation_steps.append("Found: Available slots for Google-style mock interview")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("✅ Investment optimization complete")
+        self.negotiation_steps.append("✅ Mock interview booked for James")
         await asyncio.sleep(1.5)
     
     async def _enhanced_sleep_analysis_step_by_step(self):
         """ADK agent analyzes sleep data with step-by-step execution"""
         print(f"[ADK Tool] Analyzing sleep data...")
         
-        self.negotiation_steps = ["😴 Analyzing sleep patterns..."]
+        self.negotiation_steps = ["🛌 Wellness Monitor: James had heart rate elevated for last couple of nights during sleep"]
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Average sleep: 6.2 hours (below recommended)")
+        self.negotiation_steps.append("SPO2 during sleep was ~94% as well")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Sleep quality score: 72/100")
+        self.negotiation_steps.append("Sleep monitoring app gives signal of snore as well")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("🧠 Thinking: Sleep quality declining")
+        self.negotiation_steps.append("So based on these combinations, Scheduling Primary Physician Appointment for James")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("⚠️ Alert: Sleep intervention needed")
+        self.negotiation_steps.append("✅ Task completed")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("✅ Sleep analysis complete")
-        await asyncio.sleep(1.5)
-        
-        self.alerts.append({"type": "warning", "message": "Sleep quality declining - intervention activated"})
+        self.alerts.append({"type": "success", "message": "Primary physician appointment scheduled based on sleep monitoring data."})
     
     async def _enhanced_wellness_booking_step_by_step(self):
         """ADK agent books wellness appointments with step-by-step execution"""
         print(f"[ADK Tool] Booking wellness appointment...")
         
-        self.negotiation_steps = ["💆‍♀️ Checking wellness options..."]
+        self.negotiation_steps = ["🤖 Lifestyle Buddy: I booked Chiropractor appointment for James 2 weeks back and James already visited"]
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("So, After 2 weeks will revisit Chiropractor appointment")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("James has been doing commute for 2 hours round trip and Has Desk job")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("Contacting Massage providers for James massage")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("💆‍♀️ Checking wellness options...")
         await asyncio.sleep(1.5)
         
         self.negotiation_steps.append("Found: Local massage therapist")
@@ -412,22 +430,31 @@ class ADKEnhancedBackend:
         """ADK agent scans for job opportunities with step-by-step execution"""
         print(f"[ADK Tool] Scanning job opportunities...")
         
-        self.negotiation_steps = ["🎯 Scanning job market..."]
+        self.negotiation_steps = ["🧠 Career Compass AI: James had shared with me Dream companies Google, Netflix, Meta"]
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Found: Google SDE role (94% match)")
+        self.negotiation_steps.append("I see Job posting just happened few hours back")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Found: Amazon SDE III position")
+        self.negotiation_steps.append("James profile matches 95% at these Jobs")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("Found: Meta E5 opportunity")
+        self.negotiation_steps.append("Applying to these jobs")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("🧠 Thinking: Great opportunities available")
+        self.negotiation_steps.append("Starting job application process...")
         await asyncio.sleep(1.5)
         
-        self.negotiation_steps.append("✅ Job scanning complete")
+        self.negotiation_steps.append("✅ Success: Job applications submitted to Google, Netflix, Meta")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("James already has Amazon Interview")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("So, Retrieving Interview Prep resources and uploading under Career Hub for James")
+        await asyncio.sleep(1.5)
+        
+        self.negotiation_steps.append("✅ Success: Interview prep resources, Recent interview coding problems uploaded to Career Hub ✅")
         await asyncio.sleep(1.5)
     
     async def _enhanced_market_analysis_step_by_step(self):

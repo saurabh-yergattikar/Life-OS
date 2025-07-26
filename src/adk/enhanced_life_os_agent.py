@@ -132,12 +132,12 @@ class EnhancedLifeOSAgent:
         print("[ADK Agent] Starting night agent workflow...")
         
         tasks = [
-            {"name": "Bill Negotiation", "type": "wealth", "impact": 30},
-            {"name": "Subscription Management", "type": "wealth", "impact": 10},
-            {"name": "Health Analysis", "type": "health", "impact": 0},
-            {"name": "Wellness Booking", "type": "health", "impact": 0},
-            {"name": "Career Preparation", "type": "career", "impact": 0},
-            {"name": "Market Analysis", "type": "market", "impact": 0}
+            {"name": "💰 Smart Savings Commander", "type": "wealth", "impact": 30},
+            {"name": "🧼 Auto Declutter Bot", "type": "wealth", "impact": 10},
+            {"name": "🛌 Wellness Monitor", "type": "health", "impact": 0},
+            {"name": "🤖 Lifestyle Buddy", "type": "health", "impact": 0},
+            {"name": "🧠 Career Compass AI", "type": "career", "impact": 0},
+            {"name": "🌍 Trend & Opportunity Radar", "type": "market", "impact": 0}
         ]
         
         results = []

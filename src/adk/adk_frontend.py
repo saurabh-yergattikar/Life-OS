@@ -97,7 +97,7 @@ HTML_TEMPLATE = """
                 <div class="flex items-center gap-3">
                     <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                     <div>
-                        <div class="font-semibold text-blue-800" id="task-name">Current Task</div>
+                        <div class="font-semibold text-white" id="task-name">Current Task</div>
                         <div class="text-sm text-blue-600" id="task-type">Type</div>
                     </div>
                 </div>
