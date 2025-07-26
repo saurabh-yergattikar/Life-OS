@@ -56,24 +56,36 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
   }, []);
 
   // Extract data from Night Agent results
-  const wealthSavings = nightAgentData?.totalSavings || 0;
-  const healthAlerts = nightAgentData?.alerts?.filter((alert: any) => 
-    alert.message?.toLowerCase().includes('sleep') || 
-    alert.message?.toLowerCase().includes('massage') ||
-    alert.message?.toLowerCase().includes('wellness')
-  ) || [];
-  const careerOpportunities = nightAgentData?.alerts?.filter((alert: any) => 
-    alert.message?.toLowerCase().includes('job') || 
-    alert.message?.toLowerCase().includes('career') ||
-    alert.message?.toLowerCase().includes('opportunity')
-  ) || [];
+  const wealthSavings = nightAgentData?.summary?.moneySaved || nightAgentData?.totalSavings || 0;
+  
+  // Get wealth achievements from details or alerts
+  const wealthAchievements = nightAgentData?.details?.wealth || 
+    nightAgentData?.alerts?.filter((alert: any) => 
+      alert.message?.toLowerCase().includes('bill') || 
+      alert.message?.toLowerCase().includes('subscription') ||
+      alert.message?.toLowerCase().includes('saved') ||
+      alert.message?.toLowerCase().includes('comcast') ||
+      alert.message?.toLowerCase().includes('spotify')
+    ) || [];
 
-  // Get specific achievements from alerts
-  const wealthAchievements = nightAgentData?.alerts?.filter((alert: any) => 
-    alert.message?.toLowerCase().includes('bill') || 
-    alert.message?.toLowerCase().includes('subscription') ||
-    alert.message?.toLowerCase().includes('saved')
-  ) || [];
+  // Get health alerts from details or alerts
+  const healthAlerts = nightAgentData?.details?.health || 
+    nightAgentData?.alerts?.filter((alert: any) => 
+      alert.message?.toLowerCase().includes('sleep') || 
+      alert.message?.toLowerCase().includes('massage') ||
+      alert.message?.toLowerCase().includes('wellness') ||
+      alert.message?.toLowerCase().includes('health')
+    ) || [];
+
+  // Get career opportunities from details or alerts
+  const careerOpportunities = nightAgentData?.details?.career || 
+    nightAgentData?.alerts?.filter((alert: any) => 
+      alert.message?.toLowerCase().includes('job') || 
+      alert.message?.toLowerCase().includes('career') ||
+      alert.message?.toLowerCase().includes('opportunity') ||
+      alert.message?.toLowerCase().includes('interview') ||
+      alert.message?.toLowerCase().includes('google')
+    ) || [];
 
   if (loading) {
     return (
@@ -121,7 +133,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
               wealthAchievements.slice(0, 3).map((achievement: any, index: number) => (
                 <li key={index} className="flex items-center gap-2">
                   <span className="text-green-600">✓</span> 
-                  {achievement.message}
+                  {achievement.message || achievement.name || `Task ${index + 1} completed`}
                 </li>
               ))
             ) : (
@@ -155,7 +167,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
               healthAlerts.slice(0, 3).map((alert: any, index: number) => (
                 <li key={index} className="flex items-center gap-2">
                   <span className="text-orange-500">⚠️</span> 
-                  {alert.message}
+                  {alert.message || alert.name || `Health task ${index + 1} completed`}
                 </li>
               ))
             ) : (
@@ -188,7 +200,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
               careerOpportunities.slice(0, 3).map((opportunity: any, index: number) => (
                 <li key={index} className="flex items-center gap-2">
                   <span className="text-blue-600">★</span> 
-                  {opportunity.message}
+                  {opportunity.message || opportunity.name || `Career task ${index + 1} completed`}
                 </li>
               ))
             ) : (
@@ -237,13 +249,16 @@ function WealthHubContent() {
     fetchNightAgentData();
   }, []);
 
-  const wealthSavings = nightAgentData?.totalSavings || 0;
-  const wealthAchievements = nightAgentData?.alerts?.filter((alert: any) => 
-    alert.message?.toLowerCase().includes('bill') || 
-    alert.message?.toLowerCase().includes('subscription') ||
-    alert.message?.toLowerCase().includes('saved') ||
-    alert.message?.toLowerCase().includes('portfolio')
-  ) || [];
+  const wealthSavings = nightAgentData?.summary?.moneySaved || nightAgentData?.totalSavings || 0;
+  const wealthAchievements = nightAgentData?.details?.wealth || 
+    nightAgentData?.alerts?.filter((alert: any) => 
+      alert.message?.toLowerCase().includes('bill') || 
+      alert.message?.toLowerCase().includes('subscription') ||
+      alert.message?.toLowerCase().includes('saved') ||
+      alert.message?.toLowerCase().includes('portfolio') ||
+      alert.message?.toLowerCase().includes('comcast') ||
+      alert.message?.toLowerCase().includes('spotify')
+    ) || [];
 
   if (loading) {
     return (
@@ -266,7 +281,7 @@ function WealthHubContent() {
           wealthAchievements.map((achievement: any, index: number) => (
             <li key={index} className="flex items-center gap-2">
               <span className="text-green-600">✓</span> 
-              {achievement.message}
+              {achievement.message || achievement.name || `Wealth task ${index + 1} completed`}
             </li>
           ))
         ) : (
@@ -301,11 +316,13 @@ function HealthHubContent() {
     fetchNightAgentData();
   }, []);
 
-  const healthAlerts = nightAgentData?.alerts?.filter((alert: any) => 
-    alert.message?.toLowerCase().includes('sleep') || 
-    alert.message?.toLowerCase().includes('massage') ||
-    alert.message?.toLowerCase().includes('wellness')
-  ) || [];
+  const healthAlerts = nightAgentData?.details?.health || 
+    nightAgentData?.alerts?.filter((alert: any) => 
+      alert.message?.toLowerCase().includes('sleep') || 
+      alert.message?.toLowerCase().includes('massage') ||
+      alert.message?.toLowerCase().includes('wellness') ||
+      alert.message?.toLowerCase().includes('health')
+    ) || [];
 
   if (loading) {
     return (
@@ -328,7 +345,7 @@ function HealthHubContent() {
           healthAlerts.map((alert: any, index: number) => (
             <li key={index} className="flex items-center gap-2">
               <span className="text-orange-500">⚠️</span> 
-              {alert.message}
+              {alert.message || alert.name || `Health task ${index + 1} completed`}
             </li>
           ))
         ) : (
@@ -362,11 +379,14 @@ function CareerHubContent() {
     fetchNightAgentData();
   }, []);
 
-  const careerOpportunities = nightAgentData?.alerts?.filter((alert: any) => 
-    alert.message?.toLowerCase().includes('job') || 
-    alert.message?.toLowerCase().includes('career') ||
-    alert.message?.toLowerCase().includes('opportunity')
-  ) || [];
+  const careerOpportunities = nightAgentData?.details?.career || 
+    nightAgentData?.alerts?.filter((alert: any) => 
+      alert.message?.toLowerCase().includes('job') || 
+      alert.message?.toLowerCase().includes('career') ||
+      alert.message?.toLowerCase().includes('opportunity') ||
+      alert.message?.toLowerCase().includes('interview') ||
+      alert.message?.toLowerCase().includes('google')
+    ) || [];
 
   if (loading) {
     return (
@@ -389,7 +409,7 @@ function CareerHubContent() {
           careerOpportunities.map((opportunity: any, index: number) => (
             <li key={index} className="flex items-center gap-2">
               <span className="text-blue-600">★</span> 
-              {opportunity.message}
+              {opportunity.message || opportunity.name || `Career task ${index + 1} completed`}
             </li>
           ))
         ) : (
