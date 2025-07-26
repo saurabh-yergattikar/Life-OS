@@ -449,24 +449,54 @@ ${actions.map(action => `- ${action.description}: ${action.status === 'completed
 
 Create a summary with EXACTLY these 2 sections:
 
-1. "Things I have already done for you" - List 5 items with bold important words and one-line descriptions
-2. "✅ You're Ready For:" - List 4 items with bold important concepts
+1. "✅ Things I have already done for you:" - List 5 items with EXACTLY 2 sub-bullet points each
+2. "✅ You're Ready For:" - List 4 items with EXACTLY 2 sub-bullet points each
 
 Format example:
-**Things I have already done for you:**
-- **📅 Scheduled Daily Study Sessions:** 2 hours daily, focusing on **interview prep** and **system design**, with calendar reminders set.
-- **📚 Gathered & Sent Resources:** You have a comprehensive package of study materials, including **Leadership Principles**, **interview questions**, **system design patterns**, **behavioral questions**, and **case studies**.
-- **📋 Created a Detailed Study Plan:** A 4-week plan covering **DSA**, **System Design**, **General concepts**, and **Company-specific prep**, with weekly goals.
-- **🎯 Scheduled Mock Interviews:** 5 mock interviews are booked, covering **technical**, **behavioral**, **system design**, **full-stack**, and a **final simulation**. Each includes detailed feedback.
-- **📧 Sent All Prep Materials:** Everything you need, including **study guides**, **interview questions**, and your **schedule**, has been sent to your email and is **mobile-accessible**.
+**✅ Things I have already done for you:**
+- **📅 Scheduled Daily Study Sessions:**
+       • Morning (9:00 AM - 11:00 AM) and evening (7:00 PM - 9:00 PM) study blocks.
+       • Calendar reminders set for all sessions.
+- **📚 Gathered & Sent Resources:**
+       • Leadership Principles guide and recent interview questions (2024).
+       • System design patterns and behavioral questions with STAR examples.
+- **📋 Created a Detailed Study Plan:**
+       • Week 1-2: DSA fundamentals and System Design basics.
+       • Week 3-4: Company-specific prep and final mock interviews.
+- **🎯 Scheduled Mock Interviews:**
+       • Technical mock (DSA + system design) and behavioral mock (leadership principles).
+       • System design mock (company scale) and final simulation with feedback.
+- **📧 Sent All Prep Materials:**
+       • Study guides, interview questions, and personalized schedule.
+       • Mobile-accessible materials with progress tracking.
 
 **✅ You're Ready For:**
-- **Technical rounds** (coding + system design)
-- **Behavioral interviews** (leadership principles)
-- **Backend-specific questions** (microservices, databases)
-- **Company culture** (leadership principles, values)
+- **Technical Rounds:**
+       • Coding challenges (DSA, algorithms) and system design (microservices, databases).
+       • API design principles and architecture questions.
+- **Behavioral Interviews:**
+       • Leadership principles discussion with STAR method examples.
+       • Company values alignment and culture demonstration.
+- **Role-Specific Questions:**
+       • Microservices architecture and database design (DynamoDB, RDS).
+       • Scalability patterns and cloud services (AWS) implementation.
+- **Company Culture Deep Dive:**
+       • Leadership principles in practice and company mission alignment.
+       • Team collaboration and communication within company culture.
 
-IMPORTANT: Use ONLY the format above. Do NOT use asterisks (*) for bullet points. Use ONLY hyphens (-) for bullet points. Use **bold** for important technical terms, company names, role levels, and key concepts. Make it concise and professional, specific to the company and role mentioned.
+IMPORTANT: 
+- Use ONLY the format above. 
+- Do NOT use asterisks (*) for bullet points. 
+- Use ONLY hyphens (-) for main bullet points and indented hyphens for sub-bullets. 
+- Use EXACTLY 2 sub-bullet points per main bullet. 
+- Use **bold** for important technical terms, company names, role levels, and key concepts. 
+- Make it concise and professional, specific to the company and role mentioned. 
+- Ensure proper indentation with 7 spaces before sub-bullet points.
+- The sub-bullets should be indented with spaces before the hyphen.
+- Keep main bullet descriptions SHORT - just the title, no long descriptions.
+- Keep sub-bullet points CONCISE - just key points, not long sentences.
+- Add ✅ emoji to both section titles.
+- Make ALL main bullet point text BOLD (e.g., **📅 Scheduled Daily Study Sessions:**).
 `;
 
     const summary = await geminiChat(summaryPrompt);

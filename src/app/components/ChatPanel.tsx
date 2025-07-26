@@ -10,17 +10,48 @@ interface Message {
   progress?: string[];
 }
 
-// Simple markdown renderer for bold text
+// Simple markdown renderer for bold text and bullet points
 const renderMarkdown = (text: string) => {
   // Convert **text** to <strong>text</strong>
-  const boldText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   
-  // Convert markdown lists to proper formatting
-  const formattedText = boldText
-    .replace(/^\s*-\s*/gm, '• ') // Convert - to bullet points
-    .replace(/^\s*\*\s*/gm, '• '); // Convert * to bullet points
+  // Split into lines to handle indentation properly
+  const lines = formattedText.split('\n');
+  const processedLines = lines.map(line => {
+    // Check if this is a main bullet point (starts with - and no leading spaces)
+    if (line.trim().startsWith('-') && !line.startsWith(' ')) {
+      return line.replace(/^\s*-\s*/, '• ');
+    }
+    
+    // Check if this is a sub-bullet point (starts with - and has leading spaces)
+    if (line.trim().startsWith('-') && line.startsWith(' ')) {
+      return line.replace(/^\s*-\s*/, '       ◦ ');
+    }
+    
+    // Check if this is a main bullet point with *
+    if (line.trim().startsWith('*') && !line.startsWith(' ')) {
+      return line.replace(/^\s*\*\s*/, '• ');
+    }
+    
+    // Check if this is a sub-bullet point with *
+    if (line.trim().startsWith('*') && line.startsWith(' ')) {
+      return line.replace(/^\s*\*\s*/, '       ◦ ');
+    }
+    
+    // Check if this is already a bullet point
+    if (line.trim().startsWith('•') && !line.startsWith(' ')) {
+      return line;
+    }
+    
+    // Check if this is already a sub-bullet point
+    if (line.trim().startsWith('•') && line.startsWith(' ')) {
+      return line.replace(/^\s*•\s*/, '       ◦ ');
+    }
+    
+    return line;
+  });
   
-  return formattedText;
+  return processedLines.join('\n');
 };
 
 const ChatPanel: React.FC = () => {
