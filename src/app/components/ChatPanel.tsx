@@ -16,6 +16,8 @@ export interface ChatSession {
   messages: Message[];
   createdAt: number;
   updatedAt: number;
+  isUnread?: boolean;
+  isAgentInitiated?: boolean;
 }
 
 // Simple markdown renderer for bold text and bullet points
@@ -129,6 +131,13 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   // Internal state for when no external props are provided
   const [internalSessions, setInternalSessions] = useState<ChatSession[]>([]);
   const [internalCurrentSessionId, setInternalCurrentSessionId] = useState<string | null>(null);
+  
+  // Track created agent chats to prevent infinite loops
+  const [createdAgentChats, setCreatedAgentChats] = useState<Set<string>>(new Set());
+  
+  // Notification state
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   // Use external or internal state
   const sessions = externalSessions || internalSessions;
@@ -180,6 +189,106 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
       onSessionChange(sessions, currentSessionId);
     }
   }, [sessions, currentSessionId, externalSessions, onSessionChange]);
+
+  // Agent-initiated chat logic
+  useEffect(() => {
+    const userInitiatedSessions = sessions.filter(s => !s.isAgentInitiated);
+    
+    // Create Candle Light Dinner chat when user has 2 chats (triggered by second new chat)
+    if (userInitiatedSessions.length === 2 && 
+        !sessions.some(s => s.title.includes("Candle Light")) && 
+        !createdAgentChats.has('candle_light')) {
+      // Add delay before creating agent chat
+      const timer = setTimeout(() => {
+        const candleLightSession: ChatSession = {
+          id: `agent_candle_light_${Date.now()}`,
+          title: "It's been a while since your candle light dinner night...",
+          messages: [{
+            role: "ai",
+            text: `Hi James! 🌹
+
+I noticed it's been a while since you and your wife had a romantic candle light dinner night. 💕
+
+✅ **Romantic Evening Arranged:**
+• 🍽️ **Restaurant Booking:**
+  ◦ Booked candle light dinner at your favorite Italian restaurant
+  ◦ Reserved the most romantic corner table with city views
+  ◦ Special request for rose petals and candle decoration
+  ◦ Confirmed for Next Week Saturday at 7:30 PM
+
+• 🌹 **Romantic Setup:**
+  ◦ Private corner table with dim lighting
+  ◦ Fresh rose petals scattered on the table
+  ◦ Multiple candles for intimate atmosphere
+  ◦ Background soft Italian music playing
+
+• 🍷 **Dining Experience:**
+  ◦ Premium wine pairing selected for your meal
+  ◦ Chef's special 4-course romantic dinner
+  ◦ Includes appetizer, main course, dessert, and champagne
+  ◦ All dietary preferences accommodated
+
+• 📱 **Arrangement Details:**
+  ◦ Reservation confirmed for 2 people
+  ◦ Your wife will receive a surprise notification
+  ◦ Special "Date Night" package includes everything
+  ◦ Free cancellation up to 24 hours before
+
+• 💰 **Cost Coverage:**
+  ◦ Total cost: $156.00 (including tip and taxes)
+  ◦ Premium dining experience worth every penny
+  ◦ Special anniversary-style service included
+
+**Date:** Next Week Saturday at 7:30 PM
+**Location:** Your favorite Italian restaurant
+**Dress Code:** Smart casual (you'll both look amazing!)
+
+Time to rekindle that romance, James! Your wife will be so surprised and delighted. 💖✨`,
+            type: 'simple'
+          }],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          isUnread: true,
+          isAgentInitiated: true
+        };
+        
+        const updatedSessions = [candleLightSession, ...sessions];
+        setCreatedAgentChats(prev => new Set([...prev, 'candle_light']));
+        
+        // Show notification
+        setNotificationMessage('🌹 Romantic dinner arranged for you and your wife!');
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 5000);
+        
+        if (!externalSessions) {
+          setSessions(updatedSessions);
+        }
+        if (onSessionChange) {
+          onSessionChange(updatedSessions, currentSessionId);
+        }
+      }, 10000); // 10 seconds delay
+      
+      return () => clearTimeout(timer);
+    }
+  }, [sessions.filter(s => !s.isAgentInitiated).length, externalSessions, onSessionChange, currentSessionId, createdAgentChats]);
+
+  // Mark chat as read when opened
+  useEffect(() => {
+    if (currentSessionId) {
+      const session = sessions.find(s => s.id === currentSessionId);
+      if (session && session.isUnread) {
+        const updatedSessions = sessions.map(s => 
+          s.id === currentSessionId ? { ...s, isUnread: false } : s
+        );
+        if (!externalSessions) {
+          setSessions(updatedSessions);
+        }
+        if (onSessionChange) {
+          onSessionChange(updatedSessions, currentSessionId);
+        }
+      }
+    }
+  }, [currentSessionId, sessions, externalSessions, onSessionChange]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -241,8 +350,17 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     }
     
     // Always call onSessionChange to update parent state
+    // For external sessions, we need to preserve agent chats from parent state
     if (onSessionChange) {
-      onSessionChange(updatedSessions, currentSessionId);
+      if (externalSessions) {
+        // When using external sessions, preserve agent chats from parent state
+        const agentChats = externalSessions.filter(session => session.isAgentInitiated);
+        const userChats = updatedSessions.filter(session => !session.isAgentInitiated);
+        const combinedSessions = [...agentChats, ...userChats];
+        onSessionChange(combinedSessions, currentSessionId);
+      } else {
+        onSessionChange(updatedSessions, currentSessionId);
+      }
     }
   };
 
@@ -356,6 +474,21 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-white/80 rounded-2xl shadow-xl p-4">
+      {/* Notification */}
+      {showNotification && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-sm"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔔</span>
+            <span className="font-medium">{notificationMessage}</span>
+          </div>
+        </motion.div>
+      )}
+      
       <div className="flex-1 overflow-y-auto mb-4 pr-2">
         {messages.length === 0 && (
           <div className="text-gray-400 text-center mt-12">

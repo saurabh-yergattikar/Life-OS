@@ -605,6 +605,10 @@ export default function Home() {
   // Chat history state
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentChatSessionId, setCurrentChatSessionId] = useState<string | null>(null);
+  
+  // Notification state
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   // Chat session handlers
   const handleSessionChange = (sessions: ChatSession[], currentSessionId: string | null) => {
@@ -620,7 +624,9 @@ export default function Home() {
       title: 'New Chat',
       messages: [],
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
+      isUnread: false,
+      isAgentInitiated: false
     };
     
     setChatSessions(prev => [newSession, ...prev]);
@@ -629,6 +635,13 @@ export default function Home() {
 
   const handleLoadChatSession = (sessionId: string) => {
     setCurrentChatSessionId(sessionId);
+  };
+  
+  // Handle tab changes
+  const handleTabChange = (tab: TabName) => {
+    setActiveTab(tab);
+    
+    // Mother's Day trigger disabled - keeping only Candle Light Dinner trigger
   };
 
   // Render chat content dynamically
@@ -649,7 +662,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Notification */}
+      {showNotification && (
+        <div className="fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-sm animate-pulse">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔔</span>
+            <span className="font-medium">{notificationMessage}</span>
+          </div>
+        </div>
+      )}
+      
+      <TopNav activeTab={activeTab} setActiveTab={handleTabChange} />
       <LayoutPanels 
         rightPanelVisible={rightPanelVisible} 
         setActiveTab={setActiveTab}

@@ -89,21 +89,24 @@ export default function LayoutPanels({
                     currentChatSessionId === session.id 
                       ? 'bg-blue-100 border border-blue-200' 
                       : 'bg-gray-50 hover:bg-blue-50'
-                  }`}
+                  } ${session.isUnread ? 'border-l-4 border-l-blue-500 bg-blue-50 shadow-md' : ''}`}
                   onClick={() => {
                     setActiveTab('Chat');
                     onLoadChatSession(session.id);
                   }}
                 >
                   <div className="flex items-start justify-between mb-1">
-                    <h4 className="font-medium text-gray-800 text-sm truncate flex-1">
+                    <h4 className={`font-medium text-gray-800 text-sm truncate flex-1 ${session.isUnread ? 'font-bold text-blue-800' : ''}`}>
                       {session.title}
+                      {session.isUnread && (
+                        <span className="inline-block w-3 h-3 bg-blue-500 rounded-full ml-2 animate-pulse"></span>
+                      )}
                     </h4>
                     <span className="text-xs text-gray-500 ml-2">
                       {formatDate(session.updatedAt)}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-600 truncate">
+                  <p className={`text-xs text-gray-600 truncate ${session.isUnread ? 'font-medium text-blue-700' : ''}`}>
                     {getSessionPreview(session)}
                   </p>
                   <div className="flex items-center gap-1 mt-2">
@@ -118,6 +121,16 @@ export default function LayoutPanels({
                     {session.messages.some(m => m.type === 'emergency_crisis') && (
                       <span className="text-xs bg-red-100 text-red-700 px-1.5 py-0.5 rounded">
                         Emergency
+                      </span>
+                    )}
+                    {session.isAgentInitiated && (
+                      <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
+                        Agent
+                      </span>
+                    )}
+                    {session.isUnread && (
+                      <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">
+                        NEW
                       </span>
                     )}
                   </div>
