@@ -7,6 +7,7 @@ import chatRoutes from './routes/chat';
 import agentRoutes from './routes/agent';
 import notificationRoutes from './routes/notification';
 import nightAgentRoutes from './routes/nightAgent';
+import interviewPrepRoutes from './routes/interviewPrep';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/agent', agentRoutes);
 app.use('/api/notification', notificationRoutes);
 app.use('/api/night-agent', nightAgentRoutes);
+app.use('/api/interview-prep', interviewPrepRoutes);
 
 io.on('connection', (socket: any) => {
   console.log('Client connected:', socket.id);

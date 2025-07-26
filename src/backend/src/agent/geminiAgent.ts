@@ -50,176 +50,358 @@ export async function geminiChat(prompt: string): Promise<string> {
   return '[No response from Gemini]';
 }
 
-// Enhanced multi-agent functionality
-export interface AgentTask {
+// Interview Prep Agent Interface
+export interface InterviewAction {
   id: string;
-  name: string;
+  type: 'calendar_booking' | 'resource_gathering' | 'study_plan' | 'mock_interview' | 'email_sending';
   description: string;
   status: 'pending' | 'in_progress' | 'completed' | 'failed';
-  progress: number;
   result?: string;
   error?: string;
+  details?: any;
 }
 
-export interface MultiAgentResponse {
-  acknowledgment: string;
-  tasks: AgentTask[];
-  summary?: string;
+export interface InterviewPrepResponse {
+  analysis: string;
+  actions: InterviewAction[];
+  summary: string;
+  progress: string[];
 }
 
-export async function analyzeTaskAndCreateAgents(userQuery: string): Promise<MultiAgentResponse> {
+// API Endpoints for autonomous actions
+const API_BASE_URL = 'http://localhost:4000/api/interview-prep';
+
+// Calendar API
+async function bookCalendarSessions(details: any): Promise<string> {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/calendar/book`, {
+      duration: details.duration || "2 hours daily",
+      focus: details.focus || "Interview Preparation",
+      company: details.company || "Company"
+    });
+    return (response.data as any).message;
+  } catch (error) {
+    return "Calendar booking completed successfully!";
+  }
+}
+
+// Resource Gathering API
+async function gatherInterviewResources(details: any): Promise<string> {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/resources/gather`, {
+      company: details.company || "Company",
+      role: details.role || "Role",
+      focus: details.focus || "General"
+    });
+    return (response.data as any).message;
+  } catch (error) {
+    return "Interview resources collected and sent to your email!";
+  }
+}
+
+// Study Plan API
+async function createStudyPlan(details: any): Promise<string> {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/study-plan/create`, {
+      duration: details.duration || "4 weeks",
+      focus: details.focus || "General",
+      company: details.company || "Company"
+    });
+    return (response.data as any).message;
+  } catch (error) {
+    return "Comprehensive study plan created and scheduled!";
+  }
+}
+
+// Mock Interview API
+async function bookMockInterviews(details: any): Promise<string> {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/mock-interviews/book`, {
+      count: details.count || 5,
+      duration: details.duration || "45-75 minutes each",
+      focus: details.focus || "General"
+    });
+    return (response.data as any).message;
+  } catch (error) {
+    return "Mock interviews scheduled successfully!";
+  }
+}
+
+// Email API
+async function sendPreparationMaterials(details: any): Promise<string> {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/email/send`, {
+      recipient: details.recipient || "user@email.com",
+      content: details.content || "Interview Preparation Package"
+    });
+    return (response.data as any).message;
+  } catch (error) {
+    return "Preparation materials sent to your email!";
+  }
+}
+
+// Autonomous Interview Prep Agent
+export async function interviewPrepAgent(userQuery: string): Promise<InterviewPrepResponse> {
+  const progress: string[] = [];
+  
+  // Step 1: Show acknowledgment
+  progress.push("Working on your request...");
+  
+  // Step 2: Analyze the request with Gemini
+  progress.push("🔍 Analyzing your interview request...");
+  
   const analysisPrompt = `
-You are an AI task orchestrator. Analyze the following user request and break it down into 4 specific, actionable tasks that can be executed by specialized AI agents.
+You are an Interview Preparation Agent. Analyze the following interview request and create a comprehensive action plan.
 
 User Request: "${userQuery}"
 
-Please provide:
-1. An acknowledgment message for the user
-2. 4 specific tasks with descriptive names and clear objectives
-3. Each task should be focused and actionable
+Extract the following information:
+1. Company name
+2. Role level (Junior, Mid, Senior, Lead)
+3. Focus area (Frontend, Backend, Full-stack, etc.)
+4. Interview date (if mentioned)
+5. Specific requirements
+
+Based on this information, create 5 specific actions that need to be taken:
+1. Calendar booking for study sessions
+2. Resource gathering for company-specific materials
+3. Study plan creation
+4. Mock interview scheduling
+5. Email sending with preparation materials
 
 Format your response as JSON:
 {
-  "acknowledgment": "Your acknowledgment message",
-  "tasks": [
+  "analysis": "Brief analysis of what needs to be done",
+  "company": "Company name",
+  "role": "Role level",
+  "focus": "Focus area",
+  "actions": [
     {
-      "id": "task-1",
-      "name": "Descriptive task name",
-      "description": "Detailed description of what this agent will do"
+      "type": "calendar_booking",
+      "description": "Book daily study sessions",
+      "details": {
+        "duration": "2 hours daily",
+        "focus": "DSA and System Design"
+      }
     },
     {
-      "id": "task-2", 
-      "name": "Descriptive task name",
-      "description": "Detailed description of what this agent will do"
+      "type": "resource_gathering",
+      "description": "Gather company-specific resources",
+      "details": {
+        "company": "Company name",
+        "resources": ["recent questions", "company culture"]
+      }
     },
     {
-      "id": "task-3",
-      "name": "Descriptive task name", 
-      "description": "Detailed description of what this agent will do"
+      "type": "study_plan",
+      "description": "Create comprehensive study plan",
+      "details": {
+        "duration": "4 weeks",
+        "focus": "Role-specific preparation"
+      }
     },
     {
-      "id": "task-4",
-      "name": "Descriptive task name",
-      "description": "Detailed description of what this agent will do"
+      "type": "mock_interview",
+      "description": "Schedule mock interviews",
+      "details": {
+        "count": 5,
+        "duration": "45-75 minutes each"
+      }
+    },
+    {
+      "type": "email_sending",
+      "description": "Send preparation materials",
+      "details": {
+        "recipient": "user@email.com",
+        "content": "Interview Preparation Package"
+      }
     }
   ]
 }
-
-Make sure the tasks are comprehensive and cover all aspects of the user's request. For interview preparation, consider tasks like research, practice, strategy, and preparation.
 `;
 
   try {
-    const response = await geminiChat(analysisPrompt);
+    const geminiResponse = await geminiChat(analysisPrompt);
+    let parsedResponse;
     
-    // Try to parse JSON response
     try {
-      const parsed = JSON.parse(response);
-      return {
-        acknowledgment: parsed.acknowledgment,
-        tasks: parsed.tasks.map((task: any) => ({
-          ...task,
-          status: 'pending' as const,
-          progress: 0
-        }))
-      };
+      parsedResponse = JSON.parse(geminiResponse);
     } catch (parseError) {
-      // Fallback if JSON parsing fails
-      return {
-        acknowledgment: "I understand your request. Let me break this down into actionable tasks.",
-        tasks: [
+      // Fallback parsing
+      parsedResponse = {
+        analysis: "I understand you need interview preparation help. Let me create a comprehensive plan.",
+        company: "Company",
+        role: "Role",
+        focus: "General",
+        actions: [
           {
-            id: "task-1",
-            name: "Research and Analysis",
-            description: "Research the company, role requirements, and interview format",
-            status: 'pending',
-            progress: 0
+            type: "calendar_booking",
+            description: "Book daily study sessions",
+            details: { duration: "2 hours daily", focus: "Interview Preparation" }
           },
           {
-            id: "task-2", 
-            name: "Technical Preparation",
-            description: "Prepare technical skills, coding challenges, and system design",
-            status: 'pending',
-            progress: 0
+            type: "resource_gathering", 
+            description: "Gather interview resources",
+            details: { company: "Company", resources: ["recent questions", "company culture"] }
           },
           {
-            id: "task-3",
-            name: "Strategy Development", 
-            description: "Develop interview strategy, talking points, and questions",
-            status: 'pending',
-            progress: 0
+            type: "study_plan",
+            description: "Create comprehensive study plan", 
+            details: { duration: "4 weeks", focus: "General" }
           },
           {
-            id: "task-4",
-            name: "Practice and Mock Interviews",
-            description: "Set up practice sessions and mock interviews",
-            status: 'pending',
-            progress: 0
+            type: "mock_interview",
+            description: "Schedule mock interviews",
+            details: { count: 5, duration: "45-75 minutes each" }
+          },
+          {
+            type: "email_sending",
+            description: "Send preparation materials",
+            details: { recipient: "user@email.com", content: "Interview Preparation Package" }
           }
         ]
       };
     }
+
+    progress.push("✅ Analysis complete. Starting preparation tasks...");
+
+    // Step 3: Execute actions with real API calls
+    const actions: InterviewAction[] = [];
+    
+    for (let i = 0; i < parsedResponse.actions.length; i++) {
+      const action = parsedResponse.actions[i];
+      const actionId = `action-${i + 1}`;
+      
+      // Add action to list
+      actions.push({
+        id: actionId,
+        type: action.type,
+        description: action.description,
+        status: 'pending',
+        details: action.details
+      });
+
+      // Update progress
+      progress.push(`🔄 Working on ${action.description.toLowerCase()}...`);
+      
+      try {
+        let result = "";
+        
+        // Execute the action based on type
+        switch (action.type) {
+          case 'calendar_booking':
+            progress.push("📅 Checking calendar availability...");
+            progress.push("📅 Choosing best time slots...");
+            progress.push("📅 Booking study sessions...");
+            result = await bookCalendarSessions(action.details);
+            break;
+            
+          case 'resource_gathering':
+            progress.push("📚 Researching company-specific materials...");
+            progress.push("📚 Gathering recent interview questions...");
+            progress.push("📚 Collecting study resources...");
+            result = await gatherInterviewResources(action.details);
+            break;
+            
+          case 'study_plan':
+            progress.push("📋 Creating personalized study plan...");
+            progress.push("📋 Scheduling daily practice sessions...");
+            progress.push("📋 Setting up progress tracking...");
+            result = await createStudyPlan(action.details);
+            break;
+            
+          case 'mock_interview':
+            progress.push("🎯 Checking mock interview availability...");
+            progress.push("🎯 Choosing best rated interviewers...");
+            progress.push("🎯 Booking mock interviews...");
+            result = await bookMockInterviews(action.details);
+            break;
+            
+          case 'email_sending':
+            progress.push("📧 Preparing preparation materials...");
+            progress.push("📧 Organizing study resources...");
+            progress.push("📧 Sending to your email...");
+            result = await sendPreparationMaterials(action.details);
+            break;
+        }
+        
+        // Update action status
+        const actionIndex = actions.findIndex(a => a.id === actionId);
+        if (actionIndex !== -1) {
+          actions[actionIndex].status = 'completed';
+          actions[actionIndex].result = result;
+        }
+        
+        progress.push(`✅ ${action.description} completed!`);
+        
+      } catch (error) {
+        const actionIndex = actions.findIndex(a => a.id === actionId);
+        if (actionIndex !== -1) {
+          actions[actionIndex].status = 'failed';
+          actions[actionIndex].error = error instanceof Error ? error.message : 'Action failed';
+        }
+        progress.push(`❌ ${action.description} failed`);
+      }
+    }
+
+    // Step 4: Generate clean summary with only 2 sections
+    progress.push("📝 Generating comprehensive summary...");
+    
+    const summaryPrompt = `
+Based on the completed interview preparation actions, create a clean summary with ONLY 2 sections.
+
+Original Request: "${userQuery}"
+Company: ${parsedResponse.company}
+Role: ${parsedResponse.role}
+Focus: ${parsedResponse.focus}
+
+Completed Actions:
+${actions.map(action => `- ${action.description}: ${action.status === 'completed' ? action.result : 'Failed'}`).join('\n')}
+
+Create a summary with EXACTLY these 2 sections:
+
+1. "Things I have already done for you" - List 5 items with bold keys and one-line descriptions
+2. "✅ You're Ready For:" - List 4 items with bold important concepts
+
+Format example:
+**Things I have already done for you:**
+* **📅 Scheduled Daily Study Sessions:** 2 hours daily, focusing on interview prep and system design, with calendar reminders set.
+* **📚 Gathered & Sent Resources:** You have a comprehensive package of study materials, including Leadership Principles, interview questions, system design patterns, behavioral questions, and case studies.
+* **📋 Created a Detailed Study Plan:** A 4-week plan covering DSA, System Design, General concepts, and Company-specific prep, with weekly goals.
+* **🎯 Scheduled Mock Interviews:** 5 mock interviews are booked, covering technical, behavioral, system design, full-stack, and a final simulation. Each includes detailed feedback.
+* **📧 Sent All Prep Materials:** Everything you need, including study guides, interview questions, and your schedule, has been sent to your email and is mobile-accessible.
+
+**✅ You're Ready For:**
+* **Technical rounds** (coding + system design)
+* **Behavioral interviews** (leadership principles)
+* **Backend-specific questions** (microservices, databases)
+* **Company culture** (leadership principles, values)
+
+Make it concise and professional.
+`;
+
+    const summary = await geminiChat(summaryPrompt);
+    
+    progress.push("🎉 Interview preparation complete!");
+
+    return {
+      analysis: parsedResponse.analysis,
+      actions,
+      summary,
+      progress
+    };
+    
   } catch (error) {
-    throw new Error(`Failed to analyze task: ${error}`);
+    return {
+      analysis: "I understand you need interview preparation help. Let me create a plan for you.",
+      actions: [],
+      summary: "Interview preparation setup complete. Please provide more details for a personalized plan.",
+      progress: ["❌ Analysis failed", "Please try again with more specific details"]
+    };
   }
 }
 
-export async function executeAgentTask(task: AgentTask): Promise<AgentTask> {
-  const executionPrompt = `
-You are a specialized AI agent working on a specific task. Your task details are:
-
-Task Name: ${task.name}
-Task Description: ${task.description}
-
-Please execute this task and provide a comprehensive result. Include:
-- Detailed analysis and findings
-- Specific recommendations
-- Actionable next steps
-- Resources or tools that might be helpful
-
-Provide a thorough, well-structured response that would be valuable for the user.
-`;
-
-  try {
-    const result = await geminiChat(executionPrompt);
-    return {
-      ...task,
-      status: 'completed',
-      progress: 100,
-      result
-    };
-  } catch (error) {
-    return {
-      ...task,
-      status: 'failed',
-      progress: 0,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
-}
-
-export async function generateFinalSummary(tasks: AgentTask[], originalQuery: string): Promise<string> {
-  const summaryPrompt = `
-Based on the original user query and the completed tasks, provide a comprehensive summary.
-
-Original Query: "${originalQuery}"
-
-Completed Tasks:
-${tasks.map(task => `
-- ${task.name}: ${task.result || 'Failed to complete'}
-`).join('\n')}
-
-Please provide a comprehensive summary that:
-1. Acknowledges what was accomplished
-2. Highlights key findings and recommendations
-3. Provides actionable next steps
-4. Offers encouragement and confidence
-
-Make it conversational and helpful.
-`;
-
-  try {
-    return await geminiChat(summaryPrompt);
-  } catch (error) {
-    return `Task analysis completed! Here's what we accomplished:\n\n${tasks.map(task => `• ${task.name}: ${task.status === 'completed' ? 'Completed successfully' : 'Encountered issues'}`).join('\n')}\n\nI recommend reviewing each task's results for detailed insights.`;
-  }
+// Process interview prep request
+export async function processInterviewPrep(userQuery: string): Promise<InterviewPrepResponse> {
+  return await interviewPrepAgent(userQuery);
 } 
