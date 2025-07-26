@@ -3,7 +3,7 @@ import React, { useState, useEffect, JSX } from 'react';
 import { motion } from 'framer-motion';
 import TopNav from './components/TopNav';
 import LayoutPanels from './components/LayoutPanels';
-import ChatPanel from './components/ChatPanel';
+import ChatPanel, { Message, ChatSession } from './components/ChatPanel';
 import { getNightAgentResults } from './api';
 
 type TabName = 'Daily Brief' | 'Wealth Hub' | 'Health Hub' | 'Career Hub' | 'Chat';
@@ -408,25 +408,74 @@ const demoCards: Record<TabName, JSX.Element> = {
   'Wealth Hub': <WealthHubContent />,
   'Health Hub': <HealthHubContent />,
   'Career Hub': <CareerHubContent />,
-  'Chat': (
-    <div className="h-full">
-      <ChatPanel />
-    </div>
-  ),
+  'Chat': <div className="h-full" />, // This will be handled dynamically
 };
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabName>('Daily Brief');
   const [rightPanelVisible, setRightPanelVisible] = useState(false);
+  
+  // Chat history state
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [currentChatSessionId, setCurrentChatSessionId] = useState<string | null>(null);
+
+  // Chat session handlers
+  const handleSessionChange = (sessions: ChatSession[], currentSessionId: string | null) => {
+    setChatSessions(sessions);
+    setCurrentChatSessionId(currentSessionId);
+  };
+
+  const handleNewChat = () => {
+    // Create a new chat session
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const newSession: ChatSession = {
+      id: newSessionId,
+      title: 'New Chat',
+      messages: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    
+    setChatSessions(prev => [newSession, ...prev]);
+    setCurrentChatSessionId(newSessionId);
+  };
+
+  const handleLoadChatSession = (sessionId: string) => {
+    setCurrentChatSessionId(sessionId);
+  };
+
+  // Render chat content dynamically
+  const renderChatContent = () => {
+    if (activeTab === 'Chat') {
+      return (
+        <div className="h-full">
+          <ChatPanel 
+            onSessionChange={handleSessionChange}
+            currentSessionId={currentChatSessionId}
+            sessions={chatSessions}
+          />
+        </div>
+      );
+    }
+    return demoCards[activeTab];
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
       <TopNav activeTab={activeTab} setActiveTab={setActiveTab} />
-      <LayoutPanels rightPanelVisible={rightPanelVisible} setActiveTab={setActiveTab}>
+      <LayoutPanels 
+        rightPanelVisible={rightPanelVisible} 
+        setActiveTab={setActiveTab}
+        chatSessions={chatSessions}
+        currentChatSessionId={currentChatSessionId}
+        onChatSessionChange={handleSessionChange}
+        onNewChat={handleNewChat}
+        onLoadChatSession={handleLoadChatSession}
+      >
         {activeTab === 'Daily Brief' ? (
           <DailyBriefContent setActiveTab={setActiveTab} />
         ) : (
-          demoCards[activeTab]
+          renderChatContent()
         )}
       </LayoutPanels>
     </div>

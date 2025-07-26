@@ -9213,3 +9213,395 @@ James should contact Comcast customer service and politely but firmly negotiate 
 [2025-07-26T02:02:30.385Z] Report not ready
 [2025-07-26T02:02:30.386Z] GET /api/night-agent/progress called
 [2025-07-26T02:02:30.389Z] GET /api/night-agent/progress called
+[2025-07-26T02:08:03.044Z] GET /api/night-agent/report called
+[2025-07-26T02:08:03.047Z] Report not ready
+[2025-07-26T02:08:03.055Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:30.511Z] GET /api/night-agent/report called
+[2025-07-26T02:14:30.514Z] Report not ready
+[2025-07-26T02:14:30.528Z] GET /api/night-agent/report called
+[2025-07-26T02:14:30.529Z] Report not ready
+[2025-07-26T02:14:30.533Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:30.536Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:31.465Z] GET /api/night-agent/report called
+[2025-07-26T02:14:31.466Z] Report not ready
+[2025-07-26T02:14:31.469Z] GET /api/night-agent/report called
+[2025-07-26T02:14:31.469Z] Report not ready
+[2025-07-26T02:14:31.471Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:31.472Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:32.635Z] GET /api/night-agent/report called
+[2025-07-26T02:14:32.635Z] Report not ready
+[2025-07-26T02:14:32.637Z] GET /api/night-agent/report called
+[2025-07-26T02:14:32.637Z] Report not ready
+[2025-07-26T02:14:32.638Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:32.643Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:33.172Z] GET /api/night-agent/report called
+[2025-07-26T02:14:33.173Z] Report not ready
+[2025-07-26T02:14:33.175Z] GET /api/night-agent/report called
+[2025-07-26T02:14:33.175Z] Report not ready
+[2025-07-26T02:14:33.177Z] GET /api/night-agent/progress called
+[2025-07-26T02:14:33.180Z] GET /api/night-agent/progress called
+[2025-07-26T02:15:06.159Z] GET /api/night-agent/report called
+[2025-07-26T02:15:06.163Z] Report not ready
+[2025-07-26T02:15:06.165Z] GET /api/night-agent/report called
+[2025-07-26T02:15:06.165Z] Report not ready
+[2025-07-26T02:15:06.188Z] GET /api/night-agent/progress called
+[2025-07-26T02:15:06.190Z] GET /api/night-agent/progress called
+[2025-07-26T02:16:39.493Z] GET /api/night-agent/report called
+[2025-07-26T02:16:39.495Z] Report not ready
+[2025-07-26T02:16:39.514Z] GET /api/night-agent/progress called
+[2025-07-26T02:16:44.664Z] GET /api/night-agent/progress called
+[2025-07-26T02:18:10.799Z] GET /api/night-agent/report called
+[2025-07-26T02:18:10.801Z] Report not ready
+[2025-07-26T02:18:10.806Z] GET /api/night-agent/progress called
+[2025-07-26T02:20:43.365Z] GET /api/night-agent/report called
+[2025-07-26T02:20:43.369Z] Report not ready
+[2025-07-26T02:20:43.383Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:48.721Z] GET /api/night-agent/report called
+[2025-07-26T02:25:48.724Z] Report not ready
+[2025-07-26T02:25:48.727Z] GET /api/night-agent/report called
+[2025-07-26T02:25:48.727Z] Report not ready
+[2025-07-26T02:25:48.740Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:48.743Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:50.383Z] GET /api/night-agent/report called
+[2025-07-26T02:25:50.384Z] Report not ready
+[2025-07-26T02:25:50.385Z] GET /api/night-agent/report called
+[2025-07-26T02:25:50.385Z] Report not ready
+[2025-07-26T02:25:50.390Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:50.392Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:51.327Z] GET /api/night-agent/report called
+[2025-07-26T02:25:51.327Z] Report not ready
+[2025-07-26T02:25:51.329Z] GET /api/night-agent/report called
+[2025-07-26T02:25:51.330Z] Report not ready
+[2025-07-26T02:25:51.331Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:51.332Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:52.311Z] GET /api/night-agent/report called
+[2025-07-26T02:25:52.311Z] Report not ready
+[2025-07-26T02:25:52.314Z] GET /api/night-agent/report called
+[2025-07-26T02:25:52.314Z] Report not ready
+[2025-07-26T02:25:52.320Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:52.322Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:57.715Z] POST /api/night-agent/start called
+[2025-07-26T02:25:57.742Z] Task started: bill_negotiation
+[2025-07-26T02:25:58.740Z] GET /api/night-agent/progress called
+[2025-07-26T02:25:59.739Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:01.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:02.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:03.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:04.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:05.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:06.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:07.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:08.409Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:09.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:10.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:11.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:12.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:13.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:14.412Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:15.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:16.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:16.629Z] Gemini API called for bill analysis. Result: ## Summary of Comcast Cost vs. Alternatives & Negotiation Potential
+
+James currently pays $110/month for Comcast internet, totaling $1320 annually.  Researching alternative providers and considering typical Comcast retention offers, it appears negotiation is possible and likely beneficial.
+
+**Alternative Internet Options (estimated, vary by location):**
+
+* **Fiber:**  Providers like AT&T Fiber and Verizon Fios often offer gigabit speeds for $80-$100/month, sometimes with introductory pricing even lower for the first year.  This makes fiber a strong competitor if available in James' area.
+* **DSL:**  Providers like CenturyLink and AT&T DSL offer slower speeds than cable or fiber but are typically cheaper, ranging from $50-$70/month.  This could be a good option if James doesn't need high speeds.
+* **Fixed Wireless:**  Providers like T-Mobile Home Internet and Verizon 5G Home Internet offer wireless broadband, with prices ranging from $50-$75/month. Availability and performance depend on location and network coverage.
+* **Smaller Cable Companies/Local ISPs:**  Depending on James' location, smaller providers may offer competitive cable internet packages at lower prices than Comcast.  Researching local options is crucial.
+
+
+**Negotiation Potential with Comcast:**
+
+Comcast is known for offering retention deals to customers who threaten to cancel. Common offers include:
+
+* **Reduced monthly rate:** This could bring James' bill closer to the $80-$90/month range, matching some fiber competitors.
+* **Faster speeds for the same price or a small increase:**  This could provide added value if James needs more bandwidth.
+* **Contract buyout:**  If James switches to a competitor, Comcast might offer to cover early termination fees from his previous contract (if applicable).
+* **Promotional pricing for a limited time:** Be aware that these deals often expire after 12-24 months, requiring renegotiation.
+
+
+**Recommendation:**
+
+James should:
+
+1. **Check availability of alternative providers:** Use online tools to see what speeds and prices are offered in his area by competitors like AT&T, Verizon, T-Mobile, etc., and local ISPs.
+2. **Contact Comcast Retention Department:** Armed with information about competitor pricing, James should call Comcast and express his intention to cancel due to high costs. Be polite but firm.
+3. **Be prepared to walk away:**  If Comcast doesn't offer a satisfactory deal, be ready to switch providers. Having a concrete alternative lined up strengthens James' negotiating position.
+
+By researching alternatives and strategically negotiating, James can likely lower his monthly internet bill or get better service for the same price.
+
+
+
+**Disclaimer:**  Prices and availability of internet service vary significantly by location. This analysis is based on general market trends and does not constitute financial or technical advice.  It is essential for James to conduct his own research based on his specific address and needs.
+
+[2025-07-26T02:26:17.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:18.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:19.271Z] Task completed: bill_negotiation
+[2025-07-26T02:26:19.273Z] Task started: subscription_cancel
+[2025-07-26T02:26:19.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:20.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:21.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:22.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:23.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:24.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:25.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:26.409Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:27.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:28.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:29.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:29.692Z] Task completed: subscription_cancel
+[2025-07-26T02:26:29.693Z] Task started: investment_opt
+[2025-07-26T02:26:30.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:31.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:32.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:33.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:34.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:35.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:36.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:37.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:37.580Z] Task completed: investment_opt
+[2025-07-26T02:26:37.580Z] Task started: sleep_analysis
+[2025-07-26T02:26:38.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:39.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:40.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:41.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:42.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:43.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:44.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:45.047Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:45.746Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:46.739Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:48.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:49.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:50.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:51.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:52.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:53.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:53.507Z] Task completed: sleep_analysis
+[2025-07-26T02:26:53.507Z] Task started: massage_booking
+[2025-07-26T02:26:54.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:55.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:56.411Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:57.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:58.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:26:59.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:00.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:01.244Z] Task completed: massage_booking
+[2025-07-26T02:27:01.246Z] Task started: job_scan
+[2025-07-26T02:27:01.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:02.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:03.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:04.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:05.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:06.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:07.411Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:08.412Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:09.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:10.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:11.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:12.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:13.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:14.409Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:15.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:16.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:17.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:18.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:19.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:20.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:21.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:22.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:23.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:24.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:25.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:26.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:27.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:28.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:29.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:30.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:31.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:32.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:33.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:34.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:35.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:36.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:37.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:38.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:39.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:40.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:41.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:41.623Z] Task completed: job_scan
+[2025-07-26T02:27:41.623Z] Task started: market_analysis
+[2025-07-26T02:27:42.408Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:43.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:44.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:45.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:46.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:55.409Z] GET /api/night-agent/progress called
+[2025-07-26T02:27:56.242Z] Task completed: market_analysis
+[2025-07-26T02:27:56.244Z] Night Agent session completed
+[2025-07-26T02:28:20.064Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:20.086Z] GET /api/night-agent/report called
+[2025-07-26T02:28:20.087Z] Report returned
+[2025-07-26T02:28:31.575Z] GET /api/night-agent/report called
+[2025-07-26T02:28:31.575Z] Report returned
+[2025-07-26T02:28:37.019Z] GET /api/night-agent/report called
+[2025-07-26T02:28:37.019Z] Report returned
+[2025-07-26T02:28:45.245Z] POST /api/night-agent/start called
+[2025-07-26T02:28:45.245Z] Task started: bill_negotiation
+[2025-07-26T02:28:46.258Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:47.256Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:48.258Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:49.258Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:50.264Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:51.259Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:52.257Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:53.257Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:54.258Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:55.412Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:56.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:57.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:58.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:28:59.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:00.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:01.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:02.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:03.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:04.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:04.596Z] Gemini API called for bill analysis. Result: ## Summary of Comcast Cost Comparison & Negotiation Potential for James
+
+James currently pays $110/month for Comcast internet, totaling $1320 annually.  A quick scan of competing internet providers reveals potential savings opportunities, making negotiation with Comcast a worthwhile endeavor.
+
+**Competitor Pricing (General Ranges - Availability varies by location):**
+
+* **AT&T Fiber:** Plans can start as low as $55/month for gigabit speeds, but pricing increases based on speed and location.
+* **Verizon Fios:** Similar to AT&T, Fios offers competitive pricing with plans starting around $40-50/month for lower speeds and increasing for gigabit service.
+* **Spectrum:** Offers plans in various speed tiers, with some introductory offers potentially lower than $50/month for the first year, but then prices typically rise.
+* **T-Mobile Home Internet:** A 5G home internet option starting around $50/month with autopay, offering a simpler, no-contract alternative.
+* **Local/Regional Providers:** Smaller providers often have competitive pricing to attract customers, and may offer comparable speeds at lower rates than major players.
+
+**Negotiation Potential:**
+
+James' current cost of $110/month is likely higher than introductory offers available to new customers. This creates leverage for negotiation.  He can use competitor pricing as a benchmark to demonstrate that he can get similar or better service for less elsewhere.
+
+**Negotiation Tactics:**
+
+* **Call Comcast Retention:** Specifically ask to speak with the retention department, as they have more authority to offer discounts.
+* **Be Polite but Firm:** Clearly state your intention to switch providers if a better deal isn't offered.
+* **Highlight Competitor Pricing:** Mention specific plans and prices from competitors in your area.
+* **Consider Bundling (if desired):** If open to bundling with other services (TV, phone), this can sometimes unlock discounts.  However, ensure the bundled price is truly cheaper than internet-only from a competitor.
+* **Be Prepared to Walk Away:** If Comcast doesn't offer a satisfactory discount, be prepared to switch providers.  This demonstrates seriousness and may prompt a last-minute offer.
+
+**Possible Outcomes:**
+
+* **Reduced Monthly Rate:** Comcast might offer a lower monthly rate, potentially closer to competitor pricing.
+* **Faster Speed for Same Price:** They might offer a speed upgrade at the current price, increasing value.
+* **Promotional Offers:** Temporary discounts or waivers of fees could be offered.
+* **No Negotiation:**  In some cases, Comcast might be unwilling to negotiate, particularly if competition in your area is limited.
+
+
+**Recommendation:**
+
+James should research specific competitor pricing in his area and then contact Comcast Retention armed with this information. He has a good chance of negotiating a better deal, given his current high monthly cost and the availability of competitive alternatives. If negotiation fails, switching to a competitor offering a lower price for similar service seems justified.
+
+[2025-07-26T02:29:05.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:06.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:07.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:07.417Z] Task completed: bill_negotiation
+[2025-07-26T02:29:07.418Z] Task started: subscription_cancel
+[2025-07-26T02:29:08.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:09.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:10.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:11.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:12.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:13.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:14.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:15.400Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:16.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:17.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:17.676Z] Task completed: subscription_cancel
+[2025-07-26T02:29:17.676Z] Task started: investment_opt
+[2025-07-26T02:29:18.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:19.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:20.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:21.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:22.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:23.409Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:24.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:25.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:25.608Z] Task completed: investment_opt
+[2025-07-26T02:29:25.608Z] Task started: sleep_analysis
+[2025-07-26T02:29:26.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:27.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:28.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:29.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:30.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:31.410Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:32.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:33.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:34.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:35.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:36.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:37.406Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:38.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:39.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:40.422Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:40.953Z] Task completed: sleep_analysis
+[2025-07-26T02:29:40.954Z] Task started: massage_booking
+[2025-07-26T02:29:41.404Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:42.405Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:43.400Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:44.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:45.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:46.400Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:47.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:48.412Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:48.673Z] Task completed: massage_booking
+[2025-07-26T02:29:48.673Z] Task started: job_scan
+[2025-07-26T02:29:49.401Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:50.400Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:51.407Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:52.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:53.403Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:54.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:29:55.402Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:24.487Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:25.255Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:26.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:27.255Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:28.253Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:29.254Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:30.251Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:31.089Z] Task completed: job_scan
+[2025-07-26T02:30:31.089Z] Task started: market_analysis
+[2025-07-26T02:30:31.253Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:32.253Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:33.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:34.253Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:35.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:36.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:37.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:38.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:39.251Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:40.250Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:41.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:42.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:43.253Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:44.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:45.252Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:45.527Z] Task completed: market_analysis
+[2025-07-26T02:30:45.528Z] Night Agent session completed
+[2025-07-26T02:30:46.253Z] GET /api/night-agent/progress called
+[2025-07-26T02:30:46.269Z] GET /api/night-agent/report called
+[2025-07-26T02:30:46.270Z] Report returned
+[2025-07-26T02:30:57.604Z] GET /api/night-agent/report called
+[2025-07-26T02:30:57.605Z] Report returned
+[2025-07-26T02:31:12.943Z] GET /api/night-agent/report called
+[2025-07-26T02:31:12.944Z] Report returned
+[2025-07-26T02:31:12.947Z] GET /api/night-agent/report called
+[2025-07-26T02:31:12.948Z] Report returned
+[2025-07-26T02:31:13.924Z] GET /api/night-agent/report called
+[2025-07-26T02:31:13.924Z] Report returned
+[2025-07-26T02:31:13.927Z] GET /api/night-agent/report called
+[2025-07-26T02:31:13.928Z] Report returned

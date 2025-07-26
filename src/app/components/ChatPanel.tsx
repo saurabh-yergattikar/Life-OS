@@ -2,12 +2,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
-interface Message {
+export interface Message {
   role: "user" | "ai";
   text: string;
   sessionId?: string;
   type?: 'simple' | 'interview_prep' | 'emergency_crisis';
   progress?: string[];
+}
+
+export interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+  createdAt: number;
+  updatedAt: number;
 }
 
 // Simple markdown renderer for bold text and bullet points
@@ -54,7 +62,63 @@ const renderMarkdown = (text: string) => {
   return processedLines.join('\n');
 };
 
-const ChatPanel: React.FC = () => {
+// Helper functions for localStorage
+const CHAT_HISTORY_KEY = 'life_os_chat_history';
+const CURRENT_SESSION_KEY = 'life_os_current_session';
+
+const saveChatHistory = (sessions: ChatSession[]) => {
+  try {
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(sessions));
+  } catch (error) {
+    console.error('Error saving chat history:', error);
+  }
+};
+
+const loadChatHistory = (): ChatSession[] => {
+  try {
+    const stored = localStorage.getItem(CHAT_HISTORY_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Error loading chat history:', error);
+    return [];
+  }
+};
+
+const saveCurrentSession = (sessionId: string | null) => {
+  try {
+    localStorage.setItem(CURRENT_SESSION_KEY, sessionId || '');
+  } catch (error) {
+    console.error('Error saving current session:', error);
+  }
+};
+
+const loadCurrentSession = (): string | null => {
+  try {
+    const stored = localStorage.getItem(CURRENT_SESSION_KEY);
+    return stored || null;
+  } catch (error) {
+    console.error('Error loading current session:', error);
+    return null;
+  }
+};
+
+const generateSessionTitle = (firstMessage: string): string => {
+  // Extract a meaningful title from the first user message
+  const words = firstMessage.split(' ').slice(0, 6);
+  return words.join(' ') + (firstMessage.split(' ').length > 6 ? '...' : '');
+};
+
+interface ChatPanelProps {
+  onSessionChange?: (sessions: ChatSession[], currentSessionId: string | null) => void;
+  currentSessionId?: string | null;
+  sessions?: ChatSession[];
+}
+
+const ChatPanel: React.FC<ChatPanelProps> = ({ 
+  onSessionChange, 
+  currentSessionId: externalCurrentSessionId,
+  sessions: externalSessions 
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,15 +126,134 @@ const ChatPanel: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Internal state for when no external props are provided
+  const [internalSessions, setInternalSessions] = useState<ChatSession[]>([]);
+  const [internalCurrentSessionId, setInternalCurrentSessionId] = useState<string | null>(null);
+
+  // Use external or internal state
+  const sessions = externalSessions || internalSessions;
+  const currentSessionId = externalCurrentSessionId !== undefined ? externalCurrentSessionId : internalCurrentSessionId;
+  const setSessions = externalSessions ? (() => {}) : setInternalSessions;
+  const setCurrentSessionId = externalCurrentSessionId !== undefined ? (() => {}) : setInternalCurrentSessionId;
+
+  // Load chat history on mount
+  useEffect(() => {
+    if (!externalSessions) {
+      const history = loadChatHistory();
+      setInternalSessions(history);
+      
+      const currentSession = loadCurrentSession();
+      if (currentSession && history.find(s => s.id === currentSession)) {
+        setInternalCurrentSessionId(currentSession);
+        const session = history.find(s => s.id === currentSession);
+        if (session) {
+          setMessages(session.messages);
+        }
+      } else {
+        // Start a new session if no current session or session not found
+        startNewChat();
+      }
+    }
+  }, [externalSessions]);
+
+  // Update messages when current session changes
+  useEffect(() => {
+    if (currentSessionId) {
+      const session = sessions.find(s => s.id === currentSessionId);
+      if (session) {
+        setMessages(session.messages);
+      } else {
+        setMessages([]);
+      }
+    } else {
+      setMessages([]);
+    }
+  }, [currentSessionId, sessions]);
+
+  // Save sessions when they change
+  useEffect(() => {
+    if (!externalSessions) {
+      saveChatHistory(sessions);
+      saveCurrentSession(currentSessionId);
+    }
+    if (onSessionChange) {
+      onSessionChange(sessions, currentSessionId);
+    }
+  }, [sessions, currentSessionId, externalSessions, onSessionChange]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const startNewChat = () => {
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const newSession: ChatSession = {
+      id: newSessionId,
+      title: 'New Chat',
+      messages: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    
+    const updatedSessions = [newSession, ...sessions];
+    
+    // Update internal sessions if not using external sessions
+    if (!externalSessions) {
+      setSessions(updatedSessions);
+    }
+    
+    // Always call onSessionChange to update parent state
+    if (onSessionChange) {
+      onSessionChange(updatedSessions, newSessionId);
+    }
+    
+    setCurrentSessionId(newSessionId);
+    setMessages([]);
+  };
+
+  const loadSession = (sessionId: string) => {
+    setCurrentSessionId(sessionId);
+    
+    // Call onSessionChange to update parent state
+    if (onSessionChange) {
+      onSessionChange(sessions, sessionId);
+    }
+  };
+
+  const updateSessionMessages = (sessionId: string, newMessages: Message[]) => {
+    const updatedSessions = sessions.map(session => {
+      if (session.id === sessionId) {
+        return {
+          ...session,
+          messages: newMessages,
+          updatedAt: Date.now(),
+          title: session.title === 'New Chat' && newMessages.length > 0 
+            ? generateSessionTitle(newMessages[0].text)
+            : session.title
+        };
+      }
+      return session;
+    });
+    
+    // Update internal sessions if not using external sessions
+    if (!externalSessions) {
+      setSessions(updatedSessions);
+    }
+    
+    // Always call onSessionChange to update parent state
+    if (onSessionChange) {
+      onSessionChange(updatedSessions, currentSessionId);
+    }
+  };
+
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !currentSessionId) return;
     
     const userMessage = { role: "user" as const, text: input };
-    setMessages((msgs) => [...msgs, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    updateSessionMessages(currentSessionId, newMessages);
+    
     setLoading(true);
     setError(null);
     setIsProcessing(true);
@@ -96,6 +279,8 @@ const ChatPanel: React.FC = () => {
       const data = await res.json();
       
       if (data.response) {
+        let updatedMessages = [...newMessages];
+        
         // If this is an interview prep request, show progress updates
         if (data.type === 'interview_prep' && data.progress) {
           // Show acknowledgment first
@@ -104,7 +289,9 @@ const ChatPanel: React.FC = () => {
             text: "Working on your request...",
             type: 'interview_prep'
           };
-          setMessages((msgs) => [...msgs, acknowledgmentMessage]);
+          updatedMessages = [...updatedMessages, acknowledgmentMessage];
+          setMessages(updatedMessages);
+          updateSessionMessages(currentSessionId, updatedMessages);
           
           // Show progress updates as separate messages
           for (let i = 1; i < data.progress.length; i++) {
@@ -113,7 +300,9 @@ const ChatPanel: React.FC = () => {
               text: data.progress[i],
               type: 'interview_prep'
             };
-            setMessages((msgs) => [...msgs, progressMessage]);
+            updatedMessages = [...updatedMessages, progressMessage];
+            setMessages(updatedMessages);
+            updateSessionMessages(currentSessionId, updatedMessages);
             
             // Add small delay between progress updates
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -125,7 +314,9 @@ const ChatPanel: React.FC = () => {
             text: data.response,
             type: 'interview_prep'
           };
-          setMessages((msgs) => [...msgs, summaryMessage]);
+          updatedMessages = [...updatedMessages, summaryMessage];
+          setMessages(updatedMessages);
+          updateSessionMessages(currentSessionId, updatedMessages);
         } else {
           // Regular chat response
           const aiMessage: Message = { 
@@ -134,7 +325,9 @@ const ChatPanel: React.FC = () => {
             type: data.type,
             sessionId: data.sessionId
           };
-          setMessages((msgs) => [...msgs, aiMessage]);
+          updatedMessages = [...updatedMessages, aiMessage];
+          setMessages(updatedMessages);
+          updateSessionMessages(currentSessionId, updatedMessages);
         }
         
         // Show error message if there was a fallback
