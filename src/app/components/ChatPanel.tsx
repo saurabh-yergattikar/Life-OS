@@ -10,6 +10,19 @@ interface Message {
   progress?: string[];
 }
 
+// Simple markdown renderer for bold text
+const renderMarkdown = (text: string) => {
+  // Convert **text** to <strong>text</strong>
+  const boldText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Convert markdown lists to proper formatting
+  const formattedText = boldText
+    .replace(/^\s*-\s*/gm, '• ') // Convert - to bullet points
+    .replace(/^\s*\*\s*/gm, '• '); // Convert * to bullet points
+  
+  return formattedText;
+};
+
 const ChatPanel: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -148,7 +161,16 @@ const ChatPanel: React.FC = () => {
                   : "bg-gray-100 text-gray-900 rounded-bl-2xl border border-gray-200"
               }`}
             >
-              {msg.text}
+              {msg.role === "ai" ? (
+                <div 
+                  dangerouslySetInnerHTML={{ 
+                    __html: renderMarkdown(msg.text) 
+                  }}
+                  className="prose prose-sm max-w-none"
+                />
+              ) : (
+                msg.text
+              )}
             </div>
           </motion.div>
         ))}
