@@ -57,6 +57,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
 
   // Extract data from Night Agent results
   const wealthSavings = nightAgentData?.summary?.moneySaved || nightAgentData?.totalSavings || 0;
+  const annualSavings = (nightAgentData?.summary?.moneySavedAnnually || wealthSavings * 12);
   
   // Get wealth achievements from details or alerts
   const wealthAchievements = nightAgentData?.details?.wealth || 
@@ -125,24 +126,22 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
             <span className="text-2xl">💰</span>
             <span className="font-bold text-yellow-700 text-lg">Wealth Optimization</span>
             <span className="ml-auto bg-green-100/80 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">
-              +<AnimatedCounter value={wealthSavings} prefix="$" />
+              +<AnimatedCounter value={annualSavings} prefix="$" suffix="/yr" />
             </span>
           </div>
           <ul className="text-base text-gray-700 space-y-1 mt-2">
-            {wealthAchievements.length > 0 ? (
-              wealthAchievements.slice(0, 3).map((achievement: any, index: number) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="text-green-600">✓</span> 
-                  {achievement.message || achievement.name || `Task ${index + 1} completed`}
-                </li>
-              ))
-            ) : (
-              <>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Bill negotiation ready</li>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Subscription analysis ready</li>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Investment optimization ready</li>
-              </>
-            )}
+            <li className="flex items-center gap-2">
+              <span className="text-green-600">✓</span> 
+              💰 Smart Savings Commander
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-600">✓</span> 
+              🧼 Auto Declutter Bot
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-600">✓</span> 
+              🌍 Trend & Opportunity Radar
+            </li>
           </ul>
           <button 
             onClick={() => setActiveTab('Wealth Hub')}
@@ -163,19 +162,14 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
             </span>
           </div>
           <ul className="text-base text-gray-700 space-y-1 mt-2">
-            {healthAlerts.length > 0 ? (
-              healthAlerts.slice(0, 3).map((alert: any, index: number) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="text-orange-500">⚠️</span> 
-                  {alert.message || alert.name || `Health task ${index + 1} completed`}
-                </li>
-              ))
-            ) : (
-              <>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Sleep analysis ready</li>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Wellness booking ready</li>
-              </>
-            )}
+            <li className="flex items-center gap-2">
+              <span className="text-orange-500">⚠️</span> 
+              🛌 Wellness Monitor
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-orange-500">⚠️</span> 
+              🤖 Lifestyle Buddy
+            </li>
           </ul>
           <button 
             onClick={() => setActiveTab('Health Hub')}
@@ -196,19 +190,14 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
             </span>
           </div>
           <ul className="text-base text-gray-700 space-y-1 mt-2">
-            {careerOpportunities.length > 0 ? (
-              careerOpportunities.slice(0, 3).map((opportunity: any, index: number) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="text-blue-600">★</span> 
-                  {opportunity.message || opportunity.name || `Career task ${index + 1} completed`}
-                </li>
-              ))
-            ) : (
-              <>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Job scanning ready</li>
-                <li className="flex items-center gap-2"><span className="text-green-600">✓</span> Career opportunities ready</li>
-              </>
-            )}
+            <li className="flex items-center gap-2">
+              <span className="text-blue-600">★</span> 
+              📈 Growth Strategy Engine
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-blue-600">★</span> 
+              🧠 Career Compass AI
+            </li>
           </ul>
           <button 
             onClick={() => setActiveTab('Career Hub')}
@@ -229,7 +218,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
   );
 }
 
-// Wealth Hub component with real Night Agent data
+// Wealth Hub component with real Night Agent data and table
 function WealthHubContent() {
   const [nightAgentData, setNightAgentData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -250,6 +239,7 @@ function WealthHubContent() {
   }, []);
 
   const wealthSavings = nightAgentData?.summary?.moneySaved || nightAgentData?.totalSavings || 0;
+  const annualSavings = (nightAgentData?.summary?.moneySavedAnnually || wealthSavings * 12);
   const wealthAchievements = nightAgentData?.details?.wealth || 
     nightAgentData?.alerts?.filter((alert: any) => 
       alert.message?.toLowerCase().includes('bill') || 
@@ -259,6 +249,34 @@ function WealthHubContent() {
       alert.message?.toLowerCase().includes('comcast') ||
       alert.message?.toLowerCase().includes('spotify')
     ) || [];
+
+  // Mock data for demonstration
+  const wealthStories = [
+    {
+      id: 1,
+      agent: "💰 Smart Savings Commander",
+      action: "Negotiated Comcast bill from $110 to $80/month",
+      impact: "+$30/month",
+      status: "Completed",
+      timestamp: "2:30 AM"
+    },
+    {
+      id: 2,
+      agent: "🧼 Auto Declutter Bot",
+      action: "Cancelled unused Spotify subscription",
+      impact: "+$10/month",
+      status: "Completed",
+      timestamp: "3:15 AM"
+    },
+    {
+      id: 3,
+      agent: "🌍 Trend & Opportunity Radar",
+      action: "Analyzed portfolio and recommended NVDA purchase",
+      impact: "Investment opportunity",
+      status: "Completed",
+      timestamp: "4:45 AM"
+    }
+  ];
 
   if (loading) {
     return (
@@ -272,31 +290,66 @@ function WealthHubContent() {
   }
 
   return (
-    <div className="bg-yellow-50 rounded-xl p-8 shadow text-gray-800 flex flex-col gap-4">
-      <div className="text-2xl font-bold mb-2">💰 Wealth Dashboard</div>
-      <div className="text-lg">Monthly Impact: <span className="font-bold text-green-600">+${wealthSavings}</span></div>
-      <div className="text-lg mb-4">ADK Night Agent Accomplishments:</div>
-      <ul className="list-disc ml-6 text-base space-y-2">
-        {wealthAchievements.length > 0 ? (
-          wealthAchievements.map((achievement: any, index: number) => (
-            <li key={index} className="flex items-center gap-2">
-              <span className="text-green-600">✓</span> 
-              {achievement.message || achievement.name || `Wealth task ${index + 1} completed`}
-            </li>
-          ))
-        ) : (
-          <>
-            <li>Bill negotiation ready</li>
-            <li>Subscription analysis ready</li>
-            <li>Investment optimization ready</li>
-          </>
-        )}
-      </ul>
+    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-8 shadow-lg text-gray-800">
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-3xl">💰</span>
+        <div>
+          <div className="text-3xl font-bold text-yellow-700">Wealth Dashboard</div>
+          <div className="text-lg text-gray-600">Annual Impact: <span className="font-bold text-green-600">+${annualSavings.toLocaleString()}</span></div>
+        </div>
+      </div>
+      
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-4 text-gray-700">ADK Night Agent Accomplishments</h3>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-yellow-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">Agent</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">Action</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">Impact</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">Time</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {wealthStories.map((story) => (
+                <tr key={story.id} className="hover:bg-yellow-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{story.agent}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{story.action}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">{story.impact}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {story.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{story.timestamp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Monthly Savings</div>
+          <div className="text-2xl font-bold text-green-600">+${wealthSavings}</div>
+        </div>
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Annual Savings</div>
+          <div className="text-2xl font-bold text-green-600">+${annualSavings.toLocaleString()}</div>
+        </div>
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Tasks Completed</div>
+          <div className="text-2xl font-bold text-blue-600">{wealthStories.length}</div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// Health Hub component with real Night Agent data
+// Health Hub component with real Night Agent data and table
 function HealthHubContent() {
   const [nightAgentData, setNightAgentData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -324,6 +377,26 @@ function HealthHubContent() {
       alert.message?.toLowerCase().includes('health')
     ) || [];
 
+  // Mock data for demonstration
+  const healthStories = [
+    {
+      id: 1,
+      agent: "🛌 Wellness Monitor",
+      action: "Detected elevated heart rate during sleep",
+      impact: "Primary physician appointment scheduled",
+      status: "Alert",
+      timestamp: "1:45 AM"
+    },
+    {
+      id: 2,
+      agent: "🤖 Lifestyle Buddy",
+      action: "Booked massage appointment for Friday evening",
+      impact: "Stress relief scheduled",
+      status: "Completed",
+      timestamp: "3:30 AM"
+    }
+  ];
+
   if (loading) {
     return (
       <div className="bg-red-50 rounded-xl p-8 shadow text-gray-800 flex flex-col gap-4">
@@ -336,30 +409,68 @@ function HealthHubContent() {
   }
 
   return (
-    <div className="bg-red-50 rounded-xl p-8 shadow text-gray-800 flex flex-col gap-4">
-      <div className="text-2xl font-bold mb-2">❤️ Health Dashboard</div>
-      <div className="text-lg">Health Alerts: <span className="font-bold text-red-600">{healthAlerts.length} Active</span></div>
-      <div className="text-lg mb-4">ADK Night Agent Accomplishments:</div>
-      <ul className="list-disc ml-6 text-base space-y-2">
-        {healthAlerts.length > 0 ? (
-          healthAlerts.map((alert: any, index: number) => (
-            <li key={index} className="flex items-center gap-2">
-              <span className="text-orange-500">⚠️</span> 
-              {alert.message || alert.name || `Health task ${index + 1} completed`}
-            </li>
-          ))
-        ) : (
-          <>
-            <li>Sleep analysis ready</li>
-            <li>Wellness booking ready</li>
-          </>
-        )}
-      </ul>
+    <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-8 shadow-lg text-gray-800">
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-3xl">❤️</span>
+        <div>
+          <div className="text-3xl font-bold text-red-700">Health Dashboard</div>
+          <div className="text-lg text-gray-600">Health Alerts: <span className="font-bold text-red-600">{healthStories.length} Active</span></div>
+        </div>
+      </div>
+      
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-4 text-gray-700">ADK Night Agent Accomplishments</h3>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-red-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Agent</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Action</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Impact</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Time</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {healthStories.map((story) => (
+                <tr key={story.id} className="hover:bg-red-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{story.agent}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{story.action}</td>
+                  <td className="px-6 py-4 text-sm text-blue-600 font-semibold">{story.impact}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      story.status === 'Alert' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'
+                    }`}>
+                      {story.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{story.timestamp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Health Alerts</div>
+          <div className="text-2xl font-bold text-red-600">{healthStories.filter(s => s.status === 'Alert').length}</div>
+        </div>
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Appointments Booked</div>
+          <div className="text-2xl font-bold text-blue-600">{healthStories.filter(s => s.status === 'Completed').length}</div>
+        </div>
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Tasks Completed</div>
+          <div className="text-2xl font-bold text-green-600">{healthStories.length}</div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// Career Hub component with real Night Agent data
+// Career Hub component with real Night Agent data and table
 function CareerHubContent() {
   const [nightAgentData, setNightAgentData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -388,6 +499,26 @@ function CareerHubContent() {
       alert.message?.toLowerCase().includes('google')
     ) || [];
 
+  // Mock data for demonstration
+  const careerStories = [
+    {
+      id: 1,
+      agent: "📈 Growth Strategy Engine",
+      action: "Booked mock interview session for Google preparation",
+      impact: "Interview practice scheduled",
+      status: "Completed",
+      timestamp: "2:15 AM"
+    },
+    {
+      id: 2,
+      agent: "🧠 Career Compass AI",
+      action: "Applied to job openings at Google, Netflix, Meta",
+      impact: "3 applications submitted",
+      status: "Completed",
+      timestamp: "4:20 AM"
+    }
+  ];
+
   if (loading) {
     return (
       <div className="bg-green-50 rounded-xl p-8 shadow text-gray-800 flex flex-col gap-4">
@@ -400,25 +531,61 @@ function CareerHubContent() {
   }
 
   return (
-    <div className="bg-green-50 rounded-xl p-8 shadow text-gray-800 flex flex-col gap-4">
-      <div className="text-2xl font-bold mb-2">🎯 Career Dashboard</div>
-      <div className="text-lg">Opportunities Found: <span className="font-bold text-blue-600">{careerOpportunities.length} Active</span></div>
-      <div className="text-lg mb-4">ADK Night Agent Accomplishments:</div>
-      <ul className="list-disc ml-6 text-base space-y-2">
-        {careerOpportunities.length > 0 ? (
-          careerOpportunities.map((opportunity: any, index: number) => (
-            <li key={index} className="flex items-center gap-2">
-              <span className="text-blue-600">★</span> 
-              {opportunity.message || opportunity.name || `Career task ${index + 1} completed`}
-            </li>
-          ))
-        ) : (
-          <>
-            <li>Job scanning ready</li>
-            <li>Career opportunities ready</li>
-          </>
-        )}
-      </ul>
+    <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-8 shadow-lg text-gray-800">
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-3xl">🎯</span>
+        <div>
+          <div className="text-3xl font-bold text-green-700">Career Dashboard</div>
+          <div className="text-lg text-gray-600">Opportunities Found: <span className="font-bold text-blue-600">{careerStories.length} Active</span></div>
+        </div>
+      </div>
+      
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-4 text-gray-700">ADK Night Agent Accomplishments</h3>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-green-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Agent</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Action</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Impact</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">Time</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {careerStories.map((story) => (
+                <tr key={story.id} className="hover:bg-green-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{story.agent}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{story.action}</td>
+                  <td className="px-6 py-4 text-sm text-blue-600 font-semibold">{story.impact}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {story.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{story.timestamp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Applications Submitted</div>
+          <div className="text-2xl font-bold text-blue-600">3</div>
+        </div>
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Interviews Scheduled</div>
+          <div className="text-2xl font-bold text-green-600">1</div>
+        </div>
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <div className="text-sm text-gray-500">Tasks Completed</div>
+          <div className="text-2xl font-bold text-purple-600">{careerStories.length}</div>
+        </div>
+      </div>
     </div>
   );
 }
