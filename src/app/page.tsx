@@ -109,7 +109,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
         </div>
         <div className="text-lg text-gray-700 mt-2">
           {nightAgentData ? 
-            `Here's what your ADK Night Agent accomplished while you slept:` :
+            `Here's what your Kairo Night Agent accomplished while you slept:` :
             `Your Night Agent is ready to optimize your life while you sleep`
           }
         </div>
@@ -212,7 +212,7 @@ function DailyBriefContent({ setActiveTab }: { setActiveTab: (tab: TabName) => v
       {/* Floating Action Bar */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="fixed left-1/2 -translate-x-1/2 bottom-8 z-50 flex gap-4 bg-white/80 backdrop-blur-lg rounded-full shadow-lg px-6 py-3 border border-gray-200">
         <button className="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold shadow hover:bg-blue-600 transition text-sm">Play Audio Briefing</button>
-        <button className="px-4 py-2 bg-green-500 text-white rounded-lg font-semibold shadow hover:bg-green-600 transition text-sm">Start Night Agent</button>
+        <button className="px-4 py-2 bg-green-500 text-white rounded-lg font-semibold shadow hover:bg-green-600 transition text-sm">Share Wins</button>
       </motion.div>
     </div>
   );

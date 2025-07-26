@@ -414,7 +414,7 @@ async function simulateNightAgent() {
       negotiationSteps.push("Now, we had good Analysis of Global Financial Market and James Portfolio,");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("I will notify James to buy NVDA ✅");
-      alerts.push({ type: 'success', message: 'Portfolio reviewed and buy recommendation given for NVDA.' });
+      alerts.push({ type: 'career', message: 'Portfolio reviewed and buy recommendation given for NVDA.' });
       // Add delay to show success message
       await new Promise(r => setTimeout(r, 1500));
       
@@ -441,7 +441,7 @@ async function simulateNightAgent() {
       negotiationSteps.push("So based on these combinations, Scheduling Primary Physician Appointment for James");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("✅ Task completed");
-      alerts.push({ type: 'success', message: 'Primary physician appointment scheduled based on sleep monitoring data.' });
+      alerts.push({ type: 'health', message: 'Primary physician appointment scheduled based on sleep monitoring data.' });
       // Add delay to show success message
       await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
@@ -486,7 +486,7 @@ async function simulateNightAgent() {
       negotiationSteps.push(`🧑‍💼 Massage Provider: You're welcome! Enjoy your massage session.`);
       await new Promise(r => setTimeout(r, 600));
       negotiationSteps.push("✅ Success: Massage booked for Friday evening");
-      alerts.push({ type: 'success', message: 'Massage appointment booked for Friday evening.' });
+      alerts.push({ type: 'health', message: 'Massage appointment booked for Friday evening.' });
       // Add delay to show success message
       await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
@@ -527,7 +527,7 @@ async function simulateNightAgent() {
       negotiationSteps.push(`🧑‍💼 Interview Coach: You're welcome! Good luck with your preparation.`);
       await new Promise(r => setTimeout(r, 600));
       negotiationSteps.push("✅ Success: Mock interview booked for practice");
-      alerts.push({ type: 'success', message: 'Mock interview session booked for Google preparation.' });
+      alerts.push({ type: 'career', message: 'Mock interview session booked for Google preparation.' });
       // Add delay to show success message
       await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task
@@ -555,7 +555,7 @@ async function simulateNightAgent() {
       negotiationSteps.push("So, Retrieving Interview Prep resources and uploading under Career Hub for James");
       await new Promise(r => setTimeout(r, 800));
       negotiationSteps.push("✅ Success: Interview prep resources, Recent interview coding problems uploaded to Career Hub ✅");
-      alerts.push({ type: 'success', message: 'Job applications submitted and interview prep resources uploaded to Career Hub.' });
+      alerts.push({ type: 'career', message: 'Job applications submitted and interview prep resources uploaded to Career Hub.' });
       // Add delay to show success message
       await new Promise(r => setTimeout(r, 1500));
       // Manually complete this task

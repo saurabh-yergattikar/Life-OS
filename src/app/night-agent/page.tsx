@@ -246,7 +246,7 @@ export default function NightAgentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 flex flex-col items-center justify-center p-8">
       <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-blue-200 drop-shadow mb-2">🌙 LifeOS Night Agent</h1>
+        <h1 className="text-4xl font-extrabold text-blue-200 drop-shadow mb-2">🌙 LifeOS Night Agent "Kairo"</h1>
         <div className="text-lg text-blue-100">Autonomous AI optimizing your life while you sleep</div>
       </motion.div>
       <div className="w-full max-w-3xl bg-white/10 rounded-2xl shadow-2xl p-8 flex flex-col gap-8">
@@ -265,17 +265,15 @@ export default function NightAgentPage() {
           <>
             <div className="flex items-center gap-8 justify-between">
               <div className="flex flex-col items-center">
-                <span className="text-2xl text-green-300 font-bold">${impact.money}</span>
-                <span className="text-xs text-green-100">Money Saved / Month</span>
-                <span className="text-xs text-green-200">${impact.money * 12} / Year</span>
+                <span className="text-2xl text-green-300 font-bold">${impact.money * 12}</span>
+                <span className="text-xs text-green-100">Money Saved / Year</span>
+                <span className="text-xs text-green-200">${impact.money} / Month</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-2xl text-pink-300 font-bold">{impact.health}</span>
-                <span className="text-xs text-pink-100">Health Wins</span>
+                <AnimatedCounter value={impact.health} color="pink" label="Health Wins" />
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-2xl text-yellow-300 font-bold">{impact.opportunities}</span>
-                <span className="text-xs text-yellow-100">Opportunities</span>
+                <AnimatedCounter value={impact.opportunities} color="yellow" label="Opportunities" />
               </div>
             </div>
             <div className="w-full bg-blue-900/40 rounded-full h-6 flex items-center relative overflow-hidden">
@@ -384,6 +382,34 @@ export default function NightAgentPage() {
           </>
         )}
       </div>
+    </div>
+  );
+} 
+
+function AnimatedCounter({ value, color, label }: { value: number, color: string, label: string }) {
+  const [display, setDisplay] = React.useState(0);
+  React.useEffect(() => {
+    if (display === value) return;
+    let frame: number;
+    if (display < value) {
+      frame = window.setTimeout(() => setDisplay(display + 1), 40);
+    } else if (display > value) {
+      frame = window.setTimeout(() => setDisplay(display - 1), 40);
+    }
+    return () => clearTimeout(frame);
+  }, [display, value]);
+  const colorMap: Record<string, string> = {
+    pink: 'text-pink-300',
+    yellow: 'text-yellow-300',
+  };
+  const labelColorMap: Record<string, string> = {
+    pink: 'text-pink-100',
+    yellow: 'text-yellow-100',
+  };
+  return (
+    <div className="flex flex-col items-center min-w-[80px]">
+      <span className={`text-3xl font-bold ${colorMap[color]}`}>{display}</span>
+      <span className={`text-xs ${labelColorMap[color]}`}>{label}</span>
     </div>
   );
 } 
