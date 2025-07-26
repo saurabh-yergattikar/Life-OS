@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { geminiChat, processInterviewPrep, InterviewPrepResponse } from '../agent/geminiAgent';
+import { geminiChat, interviewPrepAgent, emergencyCrisisAgent, InterviewPrepResponse } from '../agent/geminiAgent';
 const router = Router();
 
 // Store active interview prep sessions
@@ -20,51 +20,85 @@ router.post('/', async (req: Request, res: Response) => {
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
     
-    // Check if this is an interview-related request
     const interviewKeywords = ['interview', 'amazon', 'google', 'microsoft', 'facebook', 'meta', 'apple', 'netflix', 'behavioral', 'technical', 'mock', 'prepare', 'senior', 'backend', 'frontend'];
-    const isInterviewRequest = interviewKeywords.some(keyword => 
+    const emergencyKeywords = [
+      'emergency', 'crisis', 'urgent', 'immediate', 'help', 'fall', 'accident', 'hospital', 'mom', 'dad', 'family', 'sick', 'hurt', 'broken', 'bleeding', 'pain', 'unconscious', 'ambulance', '911', 'critical', 'life', 'death', 'serious', 'emergency room', 'ER', 'ICU', 'intensive care',
+      // Work-life balance conflicts
+      'production deployment', 'deployment', 'pick up', 'pickup', 'daughter', 'son', 'child', 'school', 'urgent meeting', 'critical meeting', 'deadline', 'conflict', 'time conflict', 'schedule conflict',
+      // Time-sensitive situations
+      'now', 'immediately', 'asap', 'right now', 'urgently', 'critical', 'important', 'urgent', 'time sensitive', 'time-sensitive',
+      // Family emergencies
+      'family emergency', 'parent', 'childcare', 'child care', 'babysitter', 'nanny', 'caregiver',
+      // Work emergencies
+      'server down', 'outage', 'system crash', 'database', 'production issue', 'live issue', 'customer issue', 'client emergency'
+    ];
+    
+    const isInterviewRequest = interviewKeywords.some(keyword =>
+      prompt.toLowerCase().includes(keyword)
+    );
+    
+    const isEmergencyRequest = emergencyKeywords.some(keyword =>
       prompt.toLowerCase().includes(keyword)
     );
 
-    if (isInterviewRequest) {
-      // Handle as interview prep agent request
-      const sessionId = `interview_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+    if (isEmergencyRequest) {
+      const sessionId = `emergency_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
       try {
-        // Process with interview prep agent
-        const interviewResponse = await withTimeout(processInterviewPrep(prompt), 60000); // 1 minute timeout
-        
-        // Store session
-        activeSessions.set(sessionId, interviewResponse);
-        
+        const emergencyResponse = await withTimeout(emergencyCrisisAgent(prompt), 60000);
+
+        activeSessions.set(sessionId, emergencyResponse);
+
         res.json({
-          response: interviewResponse.summary, // Only send the summary
+          response: emergencyResponse.summary,
+          sessionId,
+          actions: emergencyResponse.actions,
+          summary: emergencyResponse.summary,
+          progress: emergencyResponse.progress,
+          type: 'emergency_crisis'
+        });
+      } catch (error) {
+        console.error('Emergency crisis agent failed:', error);
+        const fallbackResponse = await withTimeout(geminiChat(prompt), 10000);
+        res.status(500).json({
+          response: fallbackResponse,
+          type: 'simple',
+          error: 'Emergency crisis processing failed, using simple response'
+        });
+      }
+    } else if (isInterviewRequest) {
+      const sessionId = `interview_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      try {
+        const interviewResponse = await withTimeout(interviewPrepAgent(prompt), 60000);
+
+        activeSessions.set(sessionId, interviewResponse);
+
+        res.json({
+          response: interviewResponse.summary,
           sessionId,
           actions: interviewResponse.actions,
           summary: interviewResponse.summary,
-          progress: interviewResponse.progress, // Include progress updates
+          progress: interviewResponse.progress,
           type: 'interview_prep'
         });
       } catch (error) {
         console.error('Interview prep agent failed:', error);
-        
-        // Fallback to simple response
         const fallbackResponse = await withTimeout(geminiChat(prompt), 10000);
-        res.json({ 
-          response: fallbackResponse, 
+        res.status(500).json({
+          response: fallbackResponse,
           type: 'simple',
           error: 'Interview prep processing failed, using simple response'
         });
       }
     } else {
-      // Handle as simple chat with timeout
-      const aiResponse = await withTimeout(geminiChat(prompt), 15000); // 15 second timeout
+      const aiResponse = await withTimeout(geminiChat(prompt), 15000);
       res.json({ response: aiResponse, type: 'simple' });
     }
   } catch (err) {
     console.error('Chat API error:', err);
-    res.status(500).json({ 
-      error: 'Chat API error', 
+    res.status(500).json({
+      error: 'Chat API error',
       details: (err as Error).message,
       type: 'error'
     });
@@ -82,6 +116,7 @@ router.get('/session/:sessionId', (req: Request, res: Response) => {
   
   res.json({
     sessionId,
+    type: sessionId.startsWith('emergency_') ? 'emergency_crisis' : 'interview_prep',
     analysis: session.analysis,
     actions: session.actions,
     summary: session.summary,
@@ -93,9 +128,10 @@ router.get('/session/:sessionId', (req: Request, res: Response) => {
 router.get('/sessions', (req: Request, res: Response) => {
   const sessions = Array.from(activeSessions.entries()).map(([sessionId, session]) => ({
     sessionId,
+    type: sessionId.startsWith('emergency_') ? 'emergency_crisis' : 'interview_prep',
     analysis: session.analysis,
-    actionCount: session.actions.length,
-    completedActions: session.actions.filter(a => a.status === 'completed').length,
+    actions: session.actions,
+    summary: session.summary,
     progress: session.progress
   }));
   

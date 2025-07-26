@@ -6,7 +6,7 @@ interface Message {
   role: "user" | "ai";
   text: string;
   sessionId?: string;
-  type?: 'simple' | 'interview_prep';
+  type?: 'simple' | 'interview_prep' | 'emergency_crisis';
   progress?: string[];
 }
 
@@ -185,17 +185,23 @@ const ChatPanel: React.FC = () => {
                   ? "bg-blue-500 text-white rounded-br-2xl"
                   : msg.type === 'interview_prep' && msg.text.includes('Working on your request')
                   ? "bg-gray-100 text-gray-900 rounded-bl-2xl border border-gray-200"
-                  : msg.type === 'interview_prep' && msg.text.includes('✅') || msg.text.includes('🎉')
+                  : msg.type === 'interview_prep' && (msg.text.includes('✅') || msg.text.includes('🎉'))
                   ? "bg-green-100 text-green-900 rounded-bl-2xl border border-green-200"
                   : msg.type === 'interview_prep'
                   ? "bg-blue-100 text-blue-900 rounded-bl-2xl border border-blue-200"
+                  : msg.type === 'emergency_crisis' && msg.text.includes('🚨')
+                  ? "bg-red-100 text-red-900 rounded-bl-2xl border border-red-200"
+                  : msg.type === 'emergency_crisis' && (msg.text.includes('✅') || msg.text.includes('🎉'))
+                  ? "bg-green-100 text-green-900 rounded-bl-2xl border border-green-200"
+                  : msg.type === 'emergency_crisis'
+                  ? "bg-orange-100 text-orange-900 rounded-bl-2xl border border-orange-200"
                   : "bg-gray-100 text-gray-900 rounded-bl-2xl border border-gray-200"
               }`}
             >
               {msg.role === "ai" ? (
-                <div 
-                  dangerouslySetInnerHTML={{ 
-                    __html: renderMarkdown(msg.text) 
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: renderMarkdown(msg.text)
                   }}
                   className="prose prose-sm max-w-none"
                 />

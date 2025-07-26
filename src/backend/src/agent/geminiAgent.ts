@@ -522,3 +522,405 @@ IMPORTANT:
 export async function processInterviewPrep(userQuery: string): Promise<InterviewPrepResponse> {
   return await interviewPrepAgent(userQuery);
 } 
+
+export async function emergencyCrisisAgent(userQuery: string): Promise<InterviewPrepResponse> {
+  const progress: string[] = [];
+
+  const emergencyFlowPrompt = `
+You are an Emergency Crisis Management Agent. Analyze the following emergency situation and create a complete crisis response flow.
+
+User Emergency: "${userQuery}"
+
+Create a complete emergency response flow that includes:
+1. Initial crisis acknowledgment message
+2. Emergency analysis phase messages
+3. Crisis response actions with progress messages
+4. Final completion message
+
+Format your response as JSON:
+{
+  "crisis_type": "family_emergency|work_crisis|health_emergency|travel_emergency",
+  "urgency_level": "critical|high|medium",
+  "location": "city/state",
+  "time_constraint": "immediate|hours|days",
+  "flow": {
+    "acknowledgment": "🚨 Emergency detected! Activating crisis response...",
+    "analysis_phase": [
+      "🔍 Analyzing emergency situation...",
+      "⚡ Identifying critical actions needed...",
+      "🎯 Crisis response plan activated..."
+    ],
+    "actions": [
+      {
+        "type": "travel_arrangement",
+        "description": "Emergency travel booking",
+        "start_message": "✈️ Working on emergency travel arrangements...",
+        "progress_messages": [
+          "🔍 Searching for immediate flights...",
+          "📅 Checking seat availability...",
+          "💳 Booking refundable ticket...",
+          "✅ Flight booked successfully!"
+        ],
+        "details": {
+          "destination": "emergency_location",
+          "priority": "immediate",
+          "flexibility": "refundable"
+        }
+      },
+      {
+        "type": "work_coverage",
+        "description": "Work responsibilities handover",
+        "start_message": "💼 Arranging work coverage...",
+        "progress_messages": [
+          "👥 Identifying available colleagues...",
+          "📋 Analyzing presentation requirements...",
+          "📝 Drafting handover notes...",
+          "✅ Work coverage confirmed!"
+        ],
+        "details": {
+          "presentation": "tomorrow",
+          "handover": "colleague_assignment",
+          "communication": "team_notification"
+        }
+      },
+      {
+        "type": "communication_management",
+        "description": "Emergency communication setup",
+        "start_message": "📱 Managing emergency communications...",
+        "progress_messages": [
+          "📧 Drafting professional notifications...",
+          "📅 Updating all meetings...",
+          "🚫 Setting out-of-office...",
+          "✅ All stakeholders notified!"
+        ],
+        "details": {
+          "stakeholders": "team_clients_meetings",
+          "tone": "professional_urgent",
+          "automation": "out_of_office"
+        }
+      },
+      {
+        "type": "family_support",
+        "description": "Family emergency support",
+        "start_message": "🏥 Arranging family support...",
+        "progress_messages": [
+          "🏥 Finding top-rated medical facilities...",
+          "👨‍⚕️ Identifying specialists...",
+          "🚗 Arranging transportation...",
+          "✅ Family support arranged!"
+        ],
+        "details": {
+          "medical": "hospital_specialist",
+          "transport": "airport_to_hospital",
+          "accommodation": "nearby_hotel"
+        }
+      },
+      {
+        "type": "childcare_coordination",
+        "description": "Childcare and family coordination",
+        "start_message": "👶 Coordinating childcare arrangements...",
+        "progress_messages": [
+          "👥 Contacting available caregivers...",
+          "📞 Checking school pickup options...",
+          "⏰ Arranging alternative pickup...",
+          "✅ Childcare coordination complete!"
+        ],
+        "details": {
+          "childcare": "pickup_arrangement",
+          "school": "coordination",
+          "backup": "caregiver_contact"
+        }
+      }
+    ],
+    "completion": "🎉 Crisis response complete! All systems activated."
+  }
+}
+
+Make ALL messages specific to the emergency type, location, and urgency level mentioned in the user request. Be creative and contextual to the crisis situation.
+`;
+
+  try {
+    const geminiResponse = await geminiChat(emergencyFlowPrompt);
+    let parsedResponse;
+
+    try {
+      parsedResponse = JSON.parse(geminiResponse);
+    } catch (parseError) {
+      // Fallback parsing with default emergency flow
+      parsedResponse = {
+        crisis_type: "family_emergency",
+        urgency_level: "critical",
+        location: "unknown",
+        time_constraint: "immediate",
+        flow: {
+          acknowledgment: "🚨 Emergency detected! Activating crisis response...",
+          analysis_phase: [
+            "🔍 Analyzing emergency situation...",
+            "⚡ Identifying critical actions needed...",
+            "🎯 Crisis response plan activated..."
+          ],
+          actions: [
+            {
+              type: "travel_arrangement",
+              description: "Emergency travel booking",
+              start_message: "✈️ Working on emergency travel arrangements...",
+              progress_messages: [
+                "🔍 Searching for immediate flights...",
+                "📅 Checking seat availability...",
+                "💳 Booking refundable ticket...",
+                "✅ Flight booked successfully!"
+              ],
+              details: { destination: "emergency_location", priority: "immediate", flexibility: "refundable" }
+            },
+            {
+              type: "work_coverage",
+              description: "Work responsibilities handover",
+              start_message: "💼 Arranging work coverage...",
+              progress_messages: [
+                "👥 Identifying available colleagues...",
+                "📋 Analyzing presentation requirements...",
+                "📝 Drafting handover notes...",
+                "✅ Work coverage confirmed!"
+              ],
+              details: { presentation: "tomorrow", handover: "colleague_assignment", communication: "team_notification" }
+            },
+            {
+              type: "communication_management",
+              description: "Emergency communication setup",
+              start_message: "📱 Managing emergency communications...",
+              progress_messages: [
+                "📧 Drafting professional notifications...",
+                "📅 Updating all meetings...",
+                "🚫 Setting out-of-office...",
+                "✅ All stakeholders notified!"
+              ],
+              details: { stakeholders: "team_clients_meetings", tone: "professional_urgent", automation: "out_of_office" }
+            },
+            {
+              type: "family_support",
+              description: "Family emergency support",
+              start_message: "🏥 Arranging family support...",
+              progress_messages: [
+                "🏥 Finding top-rated medical facilities...",
+                "👨‍⚕️ Identifying specialists...",
+                "🚗 Arranging transportation...",
+                "✅ Family support arranged!"
+              ],
+              details: { medical: "hospital_specialist", transport: "airport_to_hospital", accommodation: "nearby_hotel" }
+            },
+            {
+              type: "childcare_coordination",
+              description: "Childcare and family coordination",
+              start_message: "👶 Coordinating childcare arrangements...",
+              progress_messages: [
+                "👥 Contacting available caregivers...",
+                "📞 Checking school pickup options...",
+                "⏰ Arranging alternative pickup...",
+                "✅ Childcare coordination complete!"
+              ],
+              details: { childcare: "pickup_arrangement", school: "coordination", backup: "caregiver_contact" }
+            }
+          ],
+          completion: "🎉 Crisis response complete! All systems activated."
+        }
+      };
+    }
+
+    // Step 2: Show AI-generated acknowledgment
+    progress.push(parsedResponse.flow.acknowledgment);
+
+    // Step 3: Show AI-generated analysis phase
+    for (const message of parsedResponse.flow.analysis_phase) {
+      progress.push(message);
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    // Step 4: Execute actions with AI-generated progress messages
+    const actions: InterviewAction[] = [];
+
+    for (let i = 0; i < parsedResponse.flow.actions.length; i++) {
+      const action = parsedResponse.flow.actions[i];
+      const actionId = `emergency-action-${i + 1}`;
+
+      actions.push({
+        id: actionId,
+        type: action.type,
+        description: action.description,
+        status: 'pending',
+        details: action.details
+      });
+
+      progress.push(action.start_message);
+
+      try {
+        let result = "";
+        for (const message of action.progress_messages) {
+          progress.push(message);
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
+
+        switch (action.type) {
+          case 'travel_arrangement': result = await bookEmergencyTravel(action.details); break;
+          case 'work_coverage': result = await arrangeWorkCoverage(action.details); break;
+          case 'communication_management': result = await manageEmergencyCommunications(action.details); break;
+          case 'family_support': 
+            // Pass contextual information to family support API
+            const familySupportDetails = {
+              ...action.details,
+              location: parsedResponse.location || 'emergency location',
+              emergency_type: parsedResponse.crisis_type || 'medical emergency'
+            };
+            result = await arrangeFamilySupport(familySupportDetails); 
+            break;
+          case 'childcare_coordination':
+            result = await coordinateChildcare(action.details);
+            break;
+        }
+
+        const actionIndex = actions.findIndex(a => a.id === actionId);
+        if (actionIndex !== -1) {
+          actions[actionIndex].status = 'completed';
+          actions[actionIndex].result = result;
+        }
+
+      } catch (error) {
+        const actionIndex = actions.findIndex(a => a.id === actionId);
+        if (actionIndex !== -1) {
+          actions[actionIndex].status = 'failed';
+          actions[actionIndex].error = error instanceof Error ? error.message : 'Action failed';
+        }
+        progress.push(`❌ ${action.description} failed`);
+      }
+    }
+
+    // Step 5: Show AI-generated completion message
+    progress.push(parsedResponse.flow.completion);
+
+    // Step 6: Generate clean summary with only 2 sections
+    progress.push("📝 Generating crisis response summary...");
+
+    const emergencySummaryPrompt = `
+Based on the completed emergency crisis response actions, create a clean summary with ONLY 2 sections.
+
+Original Emergency: "${userQuery}"
+Crisis Type: ${parsedResponse.crisis_type}
+Urgency Level: ${parsedResponse.urgency_level}
+Location: ${parsedResponse.location}
+Time Constraint: ${parsedResponse.time_constraint}
+
+Completed Actions:
+${actions.map(action => `- ${action.description}: ${action.status === 'completed' ? action.result : 'Failed'}`).join('\n')}
+
+Create a summary with EXACTLY these 2 sections:
+
+1. "✅ Emergency Actions Completed:" - List 4 items with EXACTLY 2 sub-bullet points each
+2. "✅ Crisis Response Status:" - List 4 items with EXACTLY 2 sub-bullet points each
+
+Format example:
+**✅ Emergency Actions Completed:**
+- **✈️ Emergency Travel Arranged:**
+       • Flight booked with refundable ticket for immediate departure.
+       • Boarding pass sent and check-in completed automatically.
+- **💼 Work Coverage Secured:**
+       • Colleague assigned to handle tomorrow's presentation.
+       • Handover notes drafted and briefing call scheduled.
+- **📱 Communications Managed:**
+       • All stakeholders notified of emergency situation.
+       • Out-of-office set and meetings rescheduled appropriately.
+- **🏥 Family Support Activated:**
+       • Top-rated medical facility identified and specialist contacted.
+       • Transportation and accommodation arranged for family support.
+
+**✅ Crisis Response Status:**
+- **🚨 Emergency Handled:**
+       • All critical actions completed within response time.
+       • Crisis management protocols successfully activated.
+- **⏰ Time-Sensitive Tasks:**
+       • Immediate travel arrangements confirmed and booked.
+       • Work responsibilities transferred without disruption.
+- **📞 Communication Network:**
+       • Professional notifications sent to all relevant parties.
+       • Emergency contact protocols established and active.
+- **🆘 Support Systems:**
+       • Family support network activated and coordinated.
+       • Medical and logistical arrangements confirmed.
+
+IMPORTANT: 
+- Use ONLY the format above. 
+- Do NOT use asterisks (*) for bullet points. 
+- Use ONLY hyphens (-) for main bullet points and indented hyphens for sub-bullets. 
+- Use EXACTLY 2 sub-bullet points per main bullet. 
+- Use **bold** for important technical terms, emergency terms, and key concepts. 
+- Make it concise and professional, specific to the crisis type and urgency level mentioned.
+- Ensure proper indentation with 7 spaces before sub-bullet points.
+- The sub-bullets should be indented with spaces before the hyphen.
+- Keep main bullet descriptions SHORT - just the title, no long descriptions.
+- Keep sub-bullet points CONCISE - just key points, not long sentences.
+- Add ✅ emoji to both section titles.
+- Make ALL main bullet point text BOLD (e.g., **✈️ Emergency Travel Arranged:**).
+`;
+
+    const summary = await geminiChat(emergencySummaryPrompt);
+
+    return {
+      analysis: `Emergency Crisis Response: ${parsedResponse.crisis_type} - ${parsedResponse.urgency_level} urgency`,
+      actions,
+      summary,
+      progress
+    };
+
+  } catch (error) {
+    return {
+      analysis: "Emergency crisis response failed",
+      actions: [],
+      summary: "❌ Emergency response failed. Please try again or contact emergency services directly.",
+      progress: ["❌ Emergency response failed", "Please contact emergency services directly"]
+    };
+  }
+}
+
+// Emergency Crisis Management Mock API Functions
+async function bookEmergencyTravel(details: any): Promise<string> {
+  try {
+    const response = await axios.post('http://localhost:4000/api/emergency/travel', details);
+    return (response.data as any).message;
+  } catch (error) {
+    return "Emergency travel booking failed";
+  }
+}
+
+async function arrangeWorkCoverage(details: any): Promise<string> {
+  try {
+    const response = await axios.post('http://localhost:4000/api/emergency/work-coverage', details);
+    return (response.data as any).message;
+  } catch (error) {
+    return "Work coverage arrangement failed";
+  }
+}
+
+async function manageEmergencyCommunications(details: any): Promise<string> {
+  try {
+    const response = await axios.post('http://localhost:4000/api/emergency/communications', details);
+    return (response.data as any).message;
+  } catch (error) {
+    return "Emergency communications failed";
+  }
+}
+
+async function arrangeFamilySupport(details: any): Promise<string> {
+  try {
+    const response = await axios.post('http://localhost:4000/api/emergency/family-support', details);
+    return (response.data as any).message;
+  } catch (error) {
+    return "Family support arrangement failed";
+  }
+}
+
+async function coordinateChildcare(details: any): Promise<string> {
+  try {
+    const response = await axios.post('http://localhost:4000/api/emergency/childcare-coordination', details);
+    return (response.data as any).message;
+  } catch (error) {
+    return "Childcare coordination failed";
+  }
+} 
