@@ -311,7 +311,7 @@ async function simulateNightAgent() {
         negotiationSteps.push("ℹ️ No reduction confirmed");
       }
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       
       // Check if simulation should continue
       if (!isSimulationRunning) {
@@ -322,6 +322,10 @@ async function simulateNightAgent() {
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
@@ -363,7 +367,7 @@ async function simulateNightAgent() {
       alerts.push({ type: 'success', message: 'Unused Spotify subscription cancelled. Saved $10/month.' });
       billNegotiationScript = 'Unused subscription cancelled: Spotify.';
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       
       // Check if simulation should continue
       if (!isSimulationRunning) {
@@ -374,6 +378,10 @@ async function simulateNightAgent() {
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
@@ -416,7 +424,7 @@ async function simulateNightAgent() {
       negotiationSteps.push("I will notify James to buy NVDA ✅");
       alerts.push({ type: 'career', message: 'Portfolio reviewed and buy recommendation given for NVDA.' });
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       
       // Check if simulation should continue
       if (!isSimulationRunning) {
@@ -427,6 +435,10 @@ async function simulateNightAgent() {
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
@@ -443,10 +455,14 @@ async function simulateNightAgent() {
       negotiationSteps.push("✅ Task completed");
       alerts.push({ type: 'health', message: 'Primary physician appointment scheduled based on sleep monitoring data.' });
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
@@ -488,10 +504,14 @@ async function simulateNightAgent() {
       negotiationSteps.push("✅ Success: Massage booked for Friday evening");
       alerts.push({ type: 'health', message: 'Massage appointment booked for Friday evening.' });
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
@@ -529,10 +549,14 @@ async function simulateNightAgent() {
       negotiationSteps.push("✅ Success: Mock interview booked for practice");
       alerts.push({ type: 'career', message: 'Mock interview session booked for Google preparation.' });
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
@@ -557,22 +581,30 @@ async function simulateNightAgent() {
       negotiationSteps.push("✅ Success: Interview prep resources, Recent interview coding problems uploaded to Career Hub ✅");
       alerts.push({ type: 'career', message: 'Job applications submitted and interview prep resources uploaded to Career Hub.' });
       // Add delay to show success message
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 500));
       // Manually complete this task
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
       return;
     }
     // For other tasks, use the original setTimeout logic
-    setTimeout(() => {
+    setTimeout(async () => {
       completedTasks++;
       log(`Task completed: ${demoTasks[i].id}`);
       // Only add impact for tasks that don't have manual savings calculation
       if (demoTasks[i].type === 'wealth' && demoTasks[i].impact > 0) {
         totalSavings += demoTasks[i].impact;
       }
+      
+      // Wait 0.5 seconds before moving to next task (1 second total with 0.5s success message)
+      await new Promise(r => setTimeout(r, 500));
+      
       i++;
       nextTask();
     }, demoTasks[i].duration * 100);

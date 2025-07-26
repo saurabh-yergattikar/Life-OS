@@ -11,9 +11,9 @@ function NightClock({ onTimeReached }: { onTimeReached: () => void }) {
   const [shouldTrigger, setShouldTrigger] = useState(false);
 
   useEffect(() => {
-    // Start the clock at 1:59:55 AM
+    // Start the clock at 1:59:53 AM
     const startTime = new Date();
-    startTime.setHours(1, 59, 55, 0);
+    startTime.setHours(1, 59, 53, 0);
     setTime(startTime);
     setIsCounting(true);
 
